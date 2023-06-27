@@ -1,7 +1,9 @@
+import { PlantsIndex } from "./PlantsIndex";
+
 export function Content() {
   return (
     <div>
-      <h1>Welcome to PlantPals!</h1>
+      <h2><PlantsIndex /></h2>
     </div>
   )
 }

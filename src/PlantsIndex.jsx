@@ -6,10 +6,10 @@ export function PlantsIndex(props) {
         <div key={plant.id}>
           <h2>{plant.common_name}</h2>
           <img src={plant.img} />
-          <p>Width: {plant.latin_name}</p>
+          <p>Latin Name: {plant.latin_name}</p>
           <p>Watering: {plant.watering}</p>
           <p>Ideal Light: {plant.light_ideal}</p>
-          <p>Height: {plant.category}</p>
+          <p>Category: {plant.category}</p>
         </div>
       ))}
     </div>

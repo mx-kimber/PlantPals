@@ -10,6 +10,7 @@ export function PlantsIndex(props) {
           <p>Watering: {plant.watering}</p>
           <p>Ideal Light: {plant.light_ideal}</p>
           <p>Category: {plant.category}</p>
+          <button onClick={() => props.onShowPlant(plant)}>More info</button>
         </div>
       ))}
     </div>

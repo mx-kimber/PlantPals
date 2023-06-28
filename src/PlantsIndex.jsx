@@ -9,7 +9,8 @@ export function PlantsIndex(props) {
       plant.common_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       plant.latin_name.toLowerCase().includes(searchTerm.toLowerCase())
   )
-  .slice(0, 20); 
+  .sort((a, b) => a.common_name.localeCompare(b.common_name))
+    .slice(0, 20);
 
   return (
     <div>

@@ -5,14 +5,16 @@ import { Signup } from "./Signup";
 import { Login } from "./Login";
 import { LogoutLink } from "./LogoutLink";
 import { Modal } from "./Modal";
-import { PlantsShow } from "./PlantsShow"
+import { PlantsShow } from "./PlantsShow";
+import { CollectedPlantsIndex } from "./CollectedPlantsIndex";
 
 export function Content() {
   const [plants, setPlants] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [isPlantsShowVisible, setIsPlantsShowVisible] = useState(false);
   const [currentPlant, setCurrentPlant] = useState({});
-
+  const [collectedPlants, setCollectedPlants] = useState([]);
+  
   const handleIndexPlants = () => {
     axios.get("http://localhost:3000/plants.json")
       .then((response) => {
@@ -31,6 +33,14 @@ export function Content() {
     setCurrentPlant(plant);
   };
 
+  const handleIndexCollectedPlants = () => {
+    console.log("Fetching collected plants");
+    axios.get("http://localhost:3000/collected_plants.json")
+      .then((response) => {
+        setCollectedPlants(response.data);
+      });
+  };
+ 
   const handleClose = () => {
     console.log("handleClose");
     setIsPlantsShowVisible(false);
@@ -38,6 +48,7 @@ export function Content() {
 
   useEffect(() => {
     handleIndexPlants();
+    handleIndexCollectedPlants();
   }, []);
 
   return (
@@ -52,6 +63,8 @@ export function Content() {
       <Signup />
       <Login />
       <LogoutLink />
+
+      <CollectedPlantsIndex collectedPlants={collectedPlants} />
     </div>
   );
 }

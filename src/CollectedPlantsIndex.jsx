@@ -10,13 +10,13 @@ export function CollectedPlantsIndex(props) {
             {collectedPlant.nickname || 'Give your plant a nickname!'}
           </h2>
           <p>
-  {collectedPlant.custom_image ? (
-    <img src={collectedPlant.custom_image} alt="No image" />
-  ) : (
-    <img src={collectedPlant.img} alt="No image" />
-  )}
-</p>
-
+            {collectedPlant.custom_image ? (
+              <img src={collectedPlant.custom_image} alt="No image" />
+            ) : (
+              <img src={collectedPlant.img} alt="No image" />
+            )}
+          </p>
+          <p>Notes: {collectedPlant.notes}</p>
           <p>Common Name: {collectedPlant.common_name}</p>
           <p>Latin Name: {collectedPlant.latin_name}</p>
           <p>Image: {collectedPlant.img}</p>
@@ -26,12 +26,13 @@ export function CollectedPlantsIndex(props) {
           <p>Climate: {collectedPlant.climate}</p>
           <p>Category: {collectedPlant.category}</p>
           <p>URL: <a href={collectedPlant.url}>{collectedPlant.url}</a></p>
-
+          <button onClick={() => props.onShowCollectedPlant(collectedPlant)}>More info</button>
         </div>
       ))}
     </div>
   );
 }
+
 
 
 

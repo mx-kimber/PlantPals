@@ -3,12 +3,13 @@ import { Routes, Route } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Signup } from "./Signup";
 import { Login } from "./Login";
-import { LogoutLink } from "./LogoutLink";
+
 import { Modal } from "./Modal";
 import { PlantsIndex } from "./PlantsIndex";
 import { PlantsShow } from "./PlantsShow";
 import { CollectedPlantsIndex } from "./CollectedPlantsIndex";
 import { CollectedPlantsShow} from "./CollectedPlantsShow";
+import { CollectedPlantsShowSeparate } from "./CollectedPlantsShowSeparate";
 import { About } from "./About"
 
 export function Content() {
@@ -80,6 +81,11 @@ export function Content() {
             />
           }
        />
+       
+        <Route path="/collected_plants/:id" 
+          element={
+            <CollectedPlantsShowSeparate /> } />
+        
         <Route
           path="/plants"
           element={

@@ -13,6 +13,7 @@ import { CollectedPlantsShowSeparate } from "./CollectedPlantsShowSeparate";
 import { About } from "./About"
 
 export function Content() {
+
   const [errorMessage, setErrorMessage] = useState('');
 
   const [plants, setPlants] = useState([]);
@@ -22,7 +23,14 @@ export function Content() {
   const [collectedPlants, setCollectedPlants] = useState([]);
   const [isCollectedPlantsShowVisible, setIsCollectedPlantsShowVisible] = useState(false);
   const [currentCollectedPlant, setCurrentCollectedPlant] = useState({});
+  const [isCollectedPlantsShowSeparateVisible, setIsCollectedPlantsShowSeparateVisible] = useState(false);
   
+  const handleClose = () => {
+    console.log("handleClose");
+    setIsPlantsShowVisible(false);
+    setIsCollectedPlantsShowVisible(false);
+  }
+
   const handleIndexPlants = () => {
     axios.get("http://localhost:3000/plants.json")
       .then((response) => {
@@ -55,19 +63,24 @@ export function Content() {
     setCurrentCollectedPlant(collected);
   };
  
-  const handleClose = () => {
-    console.log("handleClose");
-    setIsPlantsShowVisible(false);
-    setIsCollectedPlantsShowVisible(false);
-  }
+  const handleEditCollectedPlant = () => {
+    setIsCollectedPlantsShowSeparateVisible(true);
+  };
+  
 
   useEffect(() => {
     handleIndexPlants();
     handleIndexCollectedPlants();
+    
   }, []);
+
 
   return (
     <div>
+      {errorMessage && <p>{errorMessage}</p>}
+      
+{/* ROUTES */}
+
       <Routes>
         <Route path="/about" element={<About />} />
         <Route path="/signup" element={<Signup />} />
@@ -96,27 +109,27 @@ export function Content() {
           }
         />
 
-      </Routes>
-
-
-
-      {errorMessage && <p>{errorMessage}</p>}
-      
-      
-  
+      </Routes>  
      
+{/* MODALS  */}
   
-      <Modal show={isPlantsShowVisible} 
-        onClose={handleClose}>
-        <PlantsShow plant={currentPlant} />
-      </Modal>
-  
-     
-  
-      <Modal show={isCollectedPlantsShowVisible} 
-        onClose={handleClose}>
-        <CollectedPlantsShow collectedPlant={currentCollectedPlant} />
-      </Modal>
+    <Modal show={isPlantsShowVisible} onClose={handleClose}>
+      <PlantsShow 
+        plant={currentPlant} />
+    </Modal>
+
+    <Modal show={isCollectedPlantsShowVisible} onClose={handleClose}>
+      <CollectedPlantsShow 
+        collectedPlant={currentCollectedPlant}
+        onClose={handleClose}
+        onEdit={handleEditCollectedPlant} />
+    </Modal>
+
+    <Modal show={isCollectedPlantsShowSeparateVisible} onClose={handleClose}>
+      <CollectedPlantsShowSeparate 
+        collectedPlant={currentCollectedPlant} />
+    </Modal>
+
     </div>
   );
 }

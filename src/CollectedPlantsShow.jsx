@@ -1,4 +1,12 @@
+import { Link } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+
 export function CollectedPlantsShow(props) {
+  const navigate = useNavigate();
+  const handleEdit = () => {
+    props.onClose();
+    navigate(`/collected_plants/${props.collectedPlant.id}`);
+  };
   return (
     <div>
       <h1>Collected Plant</h1>
@@ -19,6 +27,9 @@ export function CollectedPlantsShow(props) {
       <p>Tolerated Light: {props.collectedPlant.light_tolerated}</p>
       <p>Climate: {props.collectedPlant.climate}</p>
       <p>Resource: <a href={props.collectedPlant.url}>{props.collectedPlant.url}</a></p>
+      <Link to={`/collected_plants/${props.collectedPlant.id}`}>
+      <button onClick={handleEdit}>Edit Collected Plant</button>
+      </Link>
     </div>
   );
 }

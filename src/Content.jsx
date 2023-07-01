@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Routes, Route } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Signup } from "./Signup";
 import { Login } from "./Login";
@@ -8,7 +9,7 @@ import { PlantsIndex } from "./PlantsIndex";
 import { PlantsShow } from "./PlantsShow";
 import { CollectedPlantsIndex } from "./CollectedPlantsIndex";
 import { CollectedPlantsShow} from "./CollectedPlantsShow";
-
+import { About } from "./About"
 
 export function Content() {
   const [errorMessage, setErrorMessage] = useState('');
@@ -66,22 +67,45 @@ export function Content() {
 
   return (
     <div>
+      <Routes>
+        <Route path="/about" element={<About />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
+
+        <Route path="/collected_plants" 
+          element={
+            <CollectedPlantsIndex
+              collectedPlants={collectedPlants}
+              onShowCollectedPlant={handleShowCollectedPlant}
+            />
+          }
+       />
+        <Route
+          path="/plants"
+          element={
+            <PlantsIndex 
+              plants={plants} 
+              onShowPlant={handleShowPlant} 
+            />
+          }
+        />
+
+      </Routes>
+
+
+
       {errorMessage && <p>{errorMessage}</p>}
-      <Signup />
-      <Login />
-      <LogoutLink />
+      
+      
   
-      <PlantsIndex plants={plants} 
-        onShowPlant={handleShowPlant} />
+     
   
       <Modal show={isPlantsShowVisible} 
         onClose={handleClose}>
         <PlantsShow plant={currentPlant} />
       </Modal>
   
-      <CollectedPlantsIndex collectedPlants={collectedPlants}
-        onShowCollectedPlant={handleShowCollectedPlant}
-      />
+     
   
       <Modal show={isCollectedPlantsShowVisible} 
         onClose={handleClose}>

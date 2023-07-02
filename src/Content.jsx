@@ -66,6 +66,26 @@ export function Content() {
   const handleEditCollectedPlant = () => {
     setIsCollectedPlantsShowSeparateVisible(true);
   };
+
+  const handleUpdateCollectedPlant = (id, params) => {
+    console.log("handleUpdateCollectedPlant", params);
+    axios.patch(`http://localhost:3000/collected_plants/${id}.json`, params)
+      .then((response) => {
+        setCollectedPlants(
+          collectedPlants.map((collectedPlant) => {
+            if (collectedPlant.id === response.data.id) {
+              return response.data;
+            } else {
+              return collectedPlant;
+            }
+          })
+        );
+       
+        handleClose();
+        window.location.reload(); 
+      });
+  };
+    
   
 
   useEffect(() => {
@@ -97,7 +117,11 @@ export function Content() {
        
         <Route path="/collected_plants/:id" 
           element={
-            <CollectedPlantsShowSeparate /> } />
+            <CollectedPlantsShowSeparate 
+              onUpdateCollectedPlant={handleUpdateCollectedPlant} 
+              />
+            }
+        />
         
         <Route
           path="/plants"
@@ -127,7 +151,8 @@ export function Content() {
 
     <Modal show={isCollectedPlantsShowSeparateVisible} onClose={handleClose}>
       <CollectedPlantsShowSeparate 
-        collectedPlant={currentCollectedPlant} />
+        collectedPlant={currentCollectedPlant} 
+        onUpdateCollectedPlant={handleUpdateCollectedPlant} />
     </Modal>
 
     </div>

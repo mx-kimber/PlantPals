@@ -29,6 +29,7 @@ export function Content() {
     console.log("handleClose");
     setIsPlantsShowVisible(false);
     setIsCollectedPlantsShowVisible(false);
+    setIsCollectedPlantsShowSeparateVisible(false);
   }
 
   const handleIndexPlants = () => {
@@ -63,9 +64,11 @@ export function Content() {
     setCurrentCollectedPlant(collected);
   };
  
-  const handleEditCollectedPlant = () => {
+  const handleEditCollectedPlant = (collectedPlantId) => {
     setIsCollectedPlantsShowSeparateVisible(true);
+    setCurrentCollectedPlant(collectedPlants.find(collectedPlant => collectedPlant.id === collectedPlantId));
   };
+  
 
   const handleUpdateCollectedPlant = (id, params) => {
     console.log("handleUpdateCollectedPlant", params);
@@ -85,7 +88,6 @@ export function Content() {
         window.location.reload(); 
       });
   };
-    
   
 
   useEffect(() => {
@@ -106,26 +108,26 @@ export function Content() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
 
-        <Route path="/collected_plants" 
-          element={
-            <CollectedPlantsIndex
-              collectedPlants={collectedPlants}
-              onShowCollectedPlant={handleShowCollectedPlant}
-            />
-          }
-       />
+        <Route path="/collected_plants" element={
+          <CollectedPlantsIndex
+          collectedPlants={collectedPlants}
+          onShowCollectedPlant={handleShowCollectedPlant}
+          onEditCollectedPlant={(collectedPlant) => {
+            console.log('Collected Plant:', collectedPlant);
+            handleEditCollectedPlant(collectedPlant.id);
+            }}
+          />
+        }
+      />
        
-        <Route path="/collected_plants/:id" 
-          element={
-            <CollectedPlantsShowSeparate 
-              onUpdateCollectedPlant={handleUpdateCollectedPlant} 
-              />
-            }
+        <Route path="/collected_plants/:id" element={<CollectedPlantsShowSeparate
+          onUpdateCollectedPlant={handleUpdateCollectedPlant} 
+          onClose={handleClose} />}
         />
+
+
         
-        <Route
-          path="/plants"
-          element={
+        <Route path="/plants" element={
             <PlantsIndex 
               plants={plants} 
               onShowPlant={handleShowPlant} 
@@ -146,15 +148,17 @@ export function Content() {
       <CollectedPlantsShow 
         collectedPlant={currentCollectedPlant}
         onClose={handleClose}
-        onEdit={handleEditCollectedPlant} />
+      />
     </Modal>
 
-    <Modal show={isCollectedPlantsShowSeparateVisible} onClose={handleClose}>
-      <CollectedPlantsShowSeparate 
-        collectedPlant={currentCollectedPlant} 
-        onUpdateCollectedPlant={handleUpdateCollectedPlant} />
+    <Modal show={isCollectedPlantsShowSeparateVisible} onClose={handleClose}>      
+    <CollectedPlantsShowSeparate
+          collectedPlant={currentCollectedPlant}
+          onUpdateCollectedPlant={handleUpdateCollectedPlant}
+          onClose={handleClose}
+        />
     </Modal>
-
-    </div>
+    
+  </div>
   );
 }

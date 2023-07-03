@@ -15,16 +15,23 @@ export function CollectedPlantsShowSeparate({ onUpdateCollectedPlant }) {
   const getShowCollectedPlant = () => {
     console.log(params.id);
     console.log("getting collected plant");
-    axios.get(`http://localhost:3000/collected_plants/${params.id}.json`).then((response) => {
-      console.log(response.data);
-      setCollectedPlant(response.data);
-      setNickname(response.data.nickname || "");
-      setCustomImage(response.data.custom_image || "");
-      setNotes(response.data.notes || "");
-    });
+    axios
+      .get(`http://localhost:3000/collected_plants/${params.id}.json`)
+      .then((response) => {
+        console.log(response.data);
+        setCollectedPlant(response.data);
+        setNickname(response.data.nickname || "");
+        setCustomImage(response.data.custom_image || "");
+        setNotes(response.data.notes || "");
+      })
+      .catch((error) => {
+        console.error("Error retrieving collected plant:", error);
+      });
   };
 
-  useEffect(getShowCollectedPlant, []);
+  useEffect(() => {
+    getShowCollectedPlant();
+  }, []);
 
   const handleNicknameChange = (event) => {
     setNickname(event.target.value);
@@ -41,7 +48,7 @@ export function CollectedPlantsShowSeparate({ onUpdateCollectedPlant }) {
   const handleSubmitNickname = (event) => {
     event.preventDefault();
     const updatedData = {
-      nickname,
+      nickname: nickname,
     };
     onUpdateCollectedPlant(collectedPlant.id, updatedData);
     setIsNicknameModalOpen(false);
@@ -59,7 +66,7 @@ export function CollectedPlantsShowSeparate({ onUpdateCollectedPlant }) {
   const handleSubmitNotes = (event) => {
     event.preventDefault();
     const updatedData = {
-      notes,
+      notes: notes,
     };
     onUpdateCollectedPlant(collectedPlant.id, updatedData);
     setIsNotesModalOpen(false);
@@ -67,7 +74,7 @@ export function CollectedPlantsShowSeparate({ onUpdateCollectedPlant }) {
 
   return (
     <div>
-      <h1>Collected Plant</h1>
+      <h1>Plant Settings</h1>
       <p>ID: {collectedPlant.id}</p>
       <p>
         {collectedPlant.custom_image ? (
@@ -93,18 +100,6 @@ export function CollectedPlantsShowSeparate({ onUpdateCollectedPlant }) {
         Edit Custom Image
       </button>
 
-      <p>Common Name: {collectedPlant.common_name}</p>
-      <p>Latin Name: {collectedPlant.latin_name}</p>
-      <p>Category: {collectedPlant.category}</p>
-      <p>Watering: {collectedPlant.watering}</p>
-      <p>Ideal Light: {collectedPlant.light_ideal}</p>
-      <p>Tolerated Light: {collectedPlant.light_tolerated}</p>
-      <p>Climate: {collectedPlant.climate}</p>
-      <p>
-        Resource: <a href={collectedPlant.url}>{collectedPlant.url}</a>
-      </p>
-
-      {/* Edit Nickname Modal - will be changing these to handle in content  */}
       {isNicknameModalOpen && (
         <div>
           <h2>Edit Nickname</h2>
@@ -115,14 +110,16 @@ export function CollectedPlantsShowSeparate({ onUpdateCollectedPlant }) {
               onChange={handleNicknameChange}
             />
             <button type="submit">Save</button>
-            <button type="button" onClick={() => setIsNicknameModalOpen(false)}>
+            <button
+              type="button"
+              onClick={() => setIsNicknameModalOpen(false)}
+            >
               Cancel
             </button>
           </form>
         </div>
       )}
 
-      {/* Edit Custom Image Modal */}
       {isCustomImageModalOpen && (
         <div>
           <h2>Edit Custom Image</h2>
@@ -133,24 +130,26 @@ export function CollectedPlantsShowSeparate({ onUpdateCollectedPlant }) {
               onChange={handleCustomImageChange}
             />
             <button type="submit">Save</button>
-            <button type="button" onClick={() => setIsCustomImageModalOpen(false)}>
+            <button
+              type="button"
+              onClick={() => setIsCustomImageModalOpen(false)}
+            >
               Cancel
             </button>
           </form>
         </div>
       )}
 
-      {/* Edit Notes Modal */}
       {isNotesModalOpen && (
         <div>
           <h2>Edit Notes</h2>
           <form onSubmit={handleSubmitNotes}>
-            <textarea
-              value={notes}
-              onChange={handleNotesChange}
-            ></textarea>
+            <textarea value={notes} onChange={handleNotesChange}></textarea>
             <button type="submit">Save</button>
-            <button type="button" onClick={() => setIsNotesModalOpen(false)}>
+            <button
+              type="button"
+              onClick={() => setIsNotesModalOpen(false)}
+            >
               Cancel
             </button>
           </form>
@@ -159,3 +158,4 @@ export function CollectedPlantsShowSeparate({ onUpdateCollectedPlant }) {
     </div>
   );
 }
+

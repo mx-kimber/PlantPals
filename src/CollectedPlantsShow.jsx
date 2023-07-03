@@ -28,7 +28,7 @@ export function CollectedPlantsShow(props) {
       <p>Climate: {props.collectedPlant.climate}</p>
       <p>Resource: <a href={props.collectedPlant.url}>{props.collectedPlant.url}</a></p>
       <Link to={`/collected_plants/${props.collectedPlant.id}`}>
-      <button onClick={handleEdit}>Edit Collected Plant</button>
+      <button onClick={handleEdit}>Collected Plant Settings</button>
       </Link>
     </div>
   );

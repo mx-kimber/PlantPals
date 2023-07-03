@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 export function CollectedPlantsIndex(props) {
   return (
@@ -16,17 +17,18 @@ export function CollectedPlantsIndex(props) {
               <img src={collectedPlant.img} alt="No image" />
             )}
           </p>
-          <p>Notes: {collectedPlant.notes}</p>
-          <p>Common Name: {collectedPlant.common_name}</p>
+
           <p>Latin Name: {collectedPlant.latin_name}</p>
-          <p>Image: {collectedPlant.img}</p>
           <p>Watering: {collectedPlant.watering}</p>
-          <p>Ideal Light: {collectedPlant.light_ideal}</p>
-          <p>Tolerated Light: {collectedPlant.light_tolerated}</p>
-          <p>Climate: {collectedPlant.climate}</p>
-          <p>Category: {collectedPlant.category}</p>
-          <p>URL: <a href={collectedPlant.url}>{collectedPlant.url}</a></p>
-          <button onClick={() => props.onShowCollectedPlant(collectedPlant)}>More info</button>
+          <p>Notes: {collectedPlant.notes}</p>
+          
+          <button onClick={() => props.onShowCollectedPlant(collectedPlant)}>All info</button>
+
+          <button onClick={() => props.onEditCollectedPlant(true)}>Plant Settings</button>
+
+          <Link to={`/collected_plants/${collectedPlant.id}`}>
+            <button onClick={() => handleEdit(collectedPlant.id)}>Settings</button>
+          </Link>
         </div>
       ))}
     </div>

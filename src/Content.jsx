@@ -76,6 +76,24 @@ export function Content() {
      setCurrentSchedule(schedule);
    };
 
+
+  const handleUpdateSchedule = (id, params, successCallback) => {
+    console.log("handleUpdateSchedule", params);
+    axios.patch(`http://localhost:3000/schedules/${id}.json`, params).then((response) => {
+      setSchedules(
+        schedules.map((schedule) => {
+          if (schedule.id === response.data.id) {
+            return response.data;
+          } else {
+            return schedule;
+          }
+        })
+      );
+      successCallback();
+      handleClose();
+    });
+  };
+
   const handleIndexCollectedPlants = () => {
     console.log("Fetching collected plants");
     axios.get("http://localhost:3000/collected_plants.json")
@@ -161,6 +179,7 @@ export function Content() {
         <Route path ="/schedules" element={
           <SchedulesIndex 
             schedules={schedules} onShowSchedule={handleShowSchedule} 
+            onUpdateSchedule={handleUpdateSchedule}
             />
           }
         />
@@ -204,6 +223,7 @@ export function Content() {
       onClose={handleClose}>
       <SchedulesShow 
         schedule={currentSchedule} 
+        onUpdateSchedule={handleUpdateSchedule}
       />
     </Modal>
 

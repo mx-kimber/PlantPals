@@ -7,6 +7,7 @@ import { Login } from "./Login";
 import { Modal } from "./Modal";
 import { PlantsIndex } from "./PlantsIndex";
 import { PlantsShow } from "./PlantsShow";
+import { SchedulesIndex } from "./SchedulesIndex"
 import { CollectedPlantsIndex } from "./CollectedPlantsIndex";
 import { CollectedPlantsShow} from "./CollectedPlantsShow";
 import { CollectedPlantsEdit } from "./CollectedPlantsEdit";
@@ -26,7 +27,7 @@ export function Content() {
   const [isCollectedPlantsShowVisible, setIsCollectedPlantsShowVisible] = useState(false);
   const [currentCollectedPlant, setCurrentCollectedPlant] = useState({});
   const [isCollectedPlantsEditVisible, setIsCollectedPlantsEditVisible] = useState(false);
-  
+  const [schedules, setSchedules] = useState([]);
   const handleClose = () => {
     setIsPlantsShowVisible(false);
     setIsCollectedPlantsShowVisible(false);
@@ -36,6 +37,7 @@ export function Content() {
   const handleIndexPlants = () => {
     axios.get("http://localhost:3000/plants.json")
       .then((response) => {
+        console.log(response.data);
         setPlants(response.data);
       })
       .catch((error) => {
@@ -45,11 +47,21 @@ export function Content() {
   };
 
   const handleShowPlant = (plant) => {
+    console.log("handleshowPlant", plant);
     setIsPlantsShowVisible(true);
     setCurrentPlant(plant);
   };
 
+  const handleIndexSchedules = () => {
+    console.log("handleIndexSchedules");
+    axios.get("http://localhost:3000/schedules.json").then((response) => {
+      console.log(response.data);
+      setSchedules(response.data);
+    });
+  };
+
   const handleIndexCollectedPlants = () => {
+    console.log("Fetching collected plants");
     axios.get("http://localhost:3000/collected_plants.json")
       .then((response) => {
         setCollectedPlants(response.data);
@@ -59,7 +71,7 @@ export function Content() {
   const handleShowCollectedPlant = (collected) => {
     console.log("Showing collected plant:", collected);
     setIsCollectedPlantsShowVisible(true);
-    setCurrentCollectedPlant(collected);
+    setCollectedPlants(collected);
   };
  
 
@@ -94,7 +106,7 @@ export function Content() {
   useEffect(() => {
     handleIndexPlants();
     handleIndexCollectedPlants();
-    
+    handleIndexSchedules();
   }, []);
 
 
@@ -130,8 +142,11 @@ export function Content() {
             />
           }
         />
-
-
+        <Route path ="/schedules" element={
+          <SchedulesIndex 
+            schedules={schedules} />
+        }
+        />
         
         <Route path="/plants" element={
             <PlantsIndex 
@@ -160,10 +175,14 @@ export function Content() {
 
     <Modal show={isCollectedPlantsEditVisible} 
     onClose={handleClose}>      
-      <CollectedPlantsEdit />
+      <CollectedPlantsEdit 
+      collectedPlant={currentCollectedPlant}
+      onEditCollectedPlant={handleEditCollectedPlant}
+      />
       
        
     </Modal>
+
    </div>
   );
 }

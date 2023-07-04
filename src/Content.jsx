@@ -9,10 +9,12 @@ import { PlantsIndex } from "./PlantsIndex";
 import { PlantsShow } from "./PlantsShow";
 import { CollectedPlantsIndex } from "./CollectedPlantsIndex";
 import { CollectedPlantsShow} from "./CollectedPlantsShow";
-import { CollectedPlantsShowSeparate } from "./CollectedPlantsShowSeparate";
+import { CollectedPlantsEdit } from "./CollectedPlantsEdit";
 import { About } from "./About"
 
+
 export function Content() {
+
 
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -23,19 +25,17 @@ export function Content() {
   const [collectedPlants, setCollectedPlants] = useState([]);
   const [isCollectedPlantsShowVisible, setIsCollectedPlantsShowVisible] = useState(false);
   const [currentCollectedPlant, setCurrentCollectedPlant] = useState({});
-  const [isCollectedPlantsShowSeparateVisible, setIsCollectedPlantsShowSeparateVisible] = useState(false);
+  const [isCollectedPlantsEditVisible, setIsCollectedPlantsEditVisible] = useState(false);
   
   const handleClose = () => {
-    console.log("handleClose");
     setIsPlantsShowVisible(false);
     setIsCollectedPlantsShowVisible(false);
-    setIsCollectedPlantsShowSeparateVisible(false);
+    setIsCollectedPlantsEditVisible(false);
   }
 
   const handleIndexPlants = () => {
     axios.get("http://localhost:3000/plants.json")
       .then((response) => {
-        console.log(response.data);
         setPlants(response.data);
       })
       .catch((error) => {
@@ -45,13 +45,11 @@ export function Content() {
   };
 
   const handleShowPlant = (plant) => {
-    console.log("handleshowPlant", plant);
     setIsPlantsShowVisible(true);
     setCurrentPlant(plant);
   };
 
   const handleIndexCollectedPlants = () => {
-    console.log("Fetching collected plants");
     axios.get("http://localhost:3000/collected_plants.json")
       .then((response) => {
         setCollectedPlants(response.data);
@@ -64,9 +62,12 @@ export function Content() {
     setCurrentCollectedPlant(collected);
   };
  
-  const handleEditCollectedPlant = (collectedPlantId) => {
-    setIsCollectedPlantsShowSeparateVisible(true);
-    setCurrentCollectedPlant(collectedPlants.find(collectedPlant => collectedPlant.id === collectedPlantId));
+
+  const handleEditCollectedPlant = (editPlant) => {
+    console.log("handleEditCollectedPlant", editPlant);
+    setIsCollectedPlantsEditVisible(true);
+    setCurrentCollectedPlant(editPlant);
+    
   };
   
 
@@ -110,19 +111,24 @@ export function Content() {
 
         <Route path="/collected_plants" element={
           <CollectedPlantsIndex
-          collectedPlants={collectedPlants}
-          onShowCollectedPlant={handleShowCollectedPlant}
-          onEditCollectedPlant={(collectedPlant) => {
-            console.log('Collected Plant:', collectedPlant);
-            handleEditCollectedPlant(collectedPlant.id);
-            }}
+            collectedPlants={collectedPlants}
+            onShowCollectedPlant={handleShowCollectedPlant}
+            onEditCollectedPlant={handleEditCollectedPlant}
+            
           />
-        }
-      />
-       
-        <Route path="/collected_plants/:id" element={<CollectedPlantsShowSeparate
-          onUpdateCollectedPlant={handleUpdateCollectedPlant} 
-          onClose={handleClose} />}
+          }
+        />
+
+        <Route
+          path="/collected_plants/:id"
+          element={
+            <CollectedPlantsEdit
+              collectedPlant={currentCollectedPlant}
+              onEditCollectedPlant={handleEditCollectedPlant}
+              onUpdateCollectedPlant={handleUpdateCollectedPlant} 
+              onClose={handleClose}
+            />
+          }
         />
 
 
@@ -150,15 +156,15 @@ export function Content() {
         onClose={handleClose}
       />
     </Modal>
-
-    <Modal show={isCollectedPlantsShowSeparateVisible} onClose={handleClose}>      
-    <CollectedPlantsShowSeparate
-          collectedPlant={currentCollectedPlant}
-          onUpdateCollectedPlant={handleUpdateCollectedPlant}
-          onClose={handleClose}
-        />
-    </Modal>
     
-  </div>
+
+    <Modal show={isCollectedPlantsEditVisible} 
+    onClose={handleClose}>      
+      <CollectedPlantsEdit />
+      
+       
+    </Modal>
+   </div>
   );
 }
+

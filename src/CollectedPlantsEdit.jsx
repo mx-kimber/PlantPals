@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
-export function CollectedPlantsShowSeparate({ onUpdateCollectedPlant }) {
+export function CollectedPlantsEdit({ onUpdateCollectedPlant }) {
   const [collectedPlant, setCollectedPlant] = useState({});
   const [nickname, setNickname] = useState("");
   const [customImage, setCustomImage] = useState("");

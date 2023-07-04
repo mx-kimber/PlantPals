@@ -105,7 +105,7 @@ export function Content() {
   const handleShowCollectedPlant = (collected) => {
     console.log("Showing collected plant:", collected);
     setIsCollectedPlantsShowVisible(true);
-    setCollectedPlants(collected);
+    setCurrentCollectedPlant(collected);
   };
  
 
@@ -201,7 +201,8 @@ export function Content() {
         plant={currentPlant} />
     </Modal>
 
-    <Modal show={isCollectedPlantsShowVisible} onClose={handleClose}>
+    <Modal show={isCollectedPlantsShowVisible} 
+    onClose={handleClose}>
       <CollectedPlantsShow 
         collectedPlant={currentCollectedPlant}
         onClose={handleClose}

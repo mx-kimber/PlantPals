@@ -8,6 +8,7 @@ import { Modal } from "./Modal";
 import { PlantsIndex } from "./PlantsIndex";
 import { PlantsShow } from "./PlantsShow";
 import { SchedulesIndex } from "./SchedulesIndex"
+import { SchedulesShow } from "./SchedulesShow";
 import { CollectedPlantsIndex } from "./CollectedPlantsIndex";
 import { CollectedPlantsShow} from "./CollectedPlantsShow";
 import { CollectedPlantsEdit } from "./CollectedPlantsEdit";
@@ -23,15 +24,24 @@ export function Content() {
   const [isPlantsShowVisible, setIsPlantsShowVisible] = useState(false);
   const [currentPlant, setCurrentPlant] = useState({});
 
+  const [schedules, setSchedules] = useState([]);
+  const [isSchedulesShowVisible, setIsSchedulesShowVisible] = useState(false);
+  const [currentSchedule, setCurrentSchedule] = useState({});
+  
+
   const [collectedPlants, setCollectedPlants] = useState([]);
   const [isCollectedPlantsShowVisible, setIsCollectedPlantsShowVisible] = useState(false);
   const [currentCollectedPlant, setCurrentCollectedPlant] = useState({});
+
   const [isCollectedPlantsEditVisible, setIsCollectedPlantsEditVisible] = useState(false);
-  const [schedules, setSchedules] = useState([]);
+  
+  
+  
   const handleClose = () => {
     setIsPlantsShowVisible(false);
     setIsCollectedPlantsShowVisible(false);
     setIsCollectedPlantsEditVisible(false);
+    setIsSchedulesShowVisible(false);
   }
 
   const handleIndexPlants = () => {
@@ -59,6 +69,12 @@ export function Content() {
       setSchedules(response.data);
     });
   };
+
+  const handleShowSchedule = (schedule) => {
+     console.log("handleShowSchedule", schedule);
+     setIsSchedulesShowVisible(true);
+     setCurrentSchedule(schedule);
+   };
 
   const handleIndexCollectedPlants = () => {
     console.log("Fetching collected plants");
@@ -144,8 +160,9 @@ export function Content() {
         />
         <Route path ="/schedules" element={
           <SchedulesIndex 
-            schedules={schedules} />
-        }
+            schedules={schedules} onShowSchedule={handleShowSchedule} 
+            />
+          }
         />
         
         <Route path="/plants" element={
@@ -181,6 +198,13 @@ export function Content() {
       />
       
        
+    </Modal>
+
+    <Modal show={isSchedulesShowVisible} 
+      onClose={handleClose}>
+      <SchedulesShow 
+        schedule={currentSchedule} 
+      />
     </Modal>
 
    </div>

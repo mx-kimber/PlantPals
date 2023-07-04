@@ -26,6 +26,8 @@ export function CollectedPlantsIndex(props) {
 
           <button onClick={() => props.onEditCollectedPlant(true)}>Plant Settings</button>
 
+          <button onClick={() => props.onShowSchedule(props.schedule)}>Schedule</button>
+
           <Link to={`/collected_plants/${collectedPlant.id}`}>
             <button onClick={() => handleEdit(collectedPlant.id)}>Settings</button>
           </Link>

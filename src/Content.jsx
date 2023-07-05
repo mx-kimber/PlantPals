@@ -15,7 +15,7 @@ import { CollectedPlantsEdit } from "./CollectedPlantsEdit";
 import { About } from "./About"
 
 
-export function Content() {
+export function Content(props) {
 
 
   const [errorMessage, setErrorMessage] = useState('');
@@ -109,12 +109,13 @@ export function Content() {
   };
  
 
-  const handleEditCollectedPlant = (editPlant) => {
-    console.log("handleEditCollectedPlant", editPlant);
-    setIsCollectedPlantsEditVisible(true);
-    setCurrentCollectedPlant(editPlant);
-    
-  };
+const handleEditCollectedPlant = (id, editPlant) => {
+  console.log("handleEditCollectedPlant", id, editPlant);
+  setIsCollectedPlantsEditVisible(true);
+  setCurrentCollectedPlant(editPlant);
+  setCurrentSchedule(editPlant);
+};
+
   
 
   const handleUpdateCollectedPlant = (id, params) => {
@@ -160,10 +161,12 @@ export function Content() {
             collectedPlants={collectedPlants}
             onShowCollectedPlant={handleShowCollectedPlant}
             onEditCollectedPlant={handleEditCollectedPlant}
-            
-          />
+            onShowSchedule={handleShowSchedule} 
+            onUpdateSchedule={handleUpdateSchedule}/>
           }
         />
+
+
 
         <Route
           path="/collected_plants/:id"
@@ -173,12 +176,17 @@ export function Content() {
               onEditCollectedPlant={handleEditCollectedPlant}
               onUpdateCollectedPlant={handleUpdateCollectedPlant} 
               onClose={handleClose}
+              onShowSchedule={handleShowSchedule} 
+              onUpdateSchedule={handleUpdateSchedule}
+
+              
             />
           }
         />
         <Route path ="/schedules" element={
           <SchedulesIndex 
-            schedules={schedules} onShowSchedule={handleShowSchedule} 
+            schedules={schedules} 
+            onShowSchedule={handleShowSchedule} 
             onUpdateSchedule={handleUpdateSchedule}
             />
           }
@@ -224,6 +232,7 @@ export function Content() {
       onClose={handleClose}>
       <SchedulesShow 
         schedule={currentSchedule} 
+        onShowSchedule={handleShowSchedule}
         onUpdateSchedule={handleUpdateSchedule}
       />
     </Modal>

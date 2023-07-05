@@ -1,50 +1,49 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-export function CollectedPlantsIndex(props) {
+export function CollectedPlantsIndex({
+  collectedPlants,
+  onShowCollectedPlant,
+  onEditCollectedPlant,
+  onShowSchedule,
+}) {
+  const handleEditCollectedPlant = (collectedPlant) => {
+    onEditCollectedPlant(collectedPlant);
+  };
+
+  const handleShowSchedule = (schedule) => {
+    onShowSchedule(schedule);
+  };
+
   return (
     <div id="collected-plants-index">
       <h1>Plant Collection</h1>
-      {props.collectedPlants.map((collectedPlant) => (
+      {collectedPlants.map((collectedPlant) => (
         <div key={collectedPlant.id}>
-          <h2>
-            {collectedPlant.nickname || 'Give your plant a nickname!'}
-          </h2>
-          <p>
-            {collectedPlant.custom_image ? (
-              <img src={collectedPlant.custom_image} alt="No image" />
-            ) : (
-              <img src={collectedPlant.img} alt="No image" />
-            )}
-          </p>
+          <h2>{collectedPlant.nickname || collectedPlant.common_name || collectedPlant.latin_name}</h2>
 
-          <p>Latin Name: {collectedPlant.latin_name}</p>
+          <Link to={`/collected_plants/${collectedPlant.id}`}><img
+            src={collectedPlant.custom_image || collectedPlant.img}
+            alt="No image"
+            onClick={() => onShowCollectedPlant(collectedPlant)}
+          /></Link>
+
           <p>Watering: {collectedPlant.watering}</p>
           <p>Notes: {collectedPlant.notes}</p>
-          
-          <button onClick={() => props.onShowCollectedPlant(collectedPlant)}>All info</button>
 
-          <button onClick={() => props.onEditCollectedPlant(true)}>Plant Settings</button>
+          <button onClick={() => onShowCollectedPlant(collectedPlant)}>
+            All info
+          </button>
 
-          <button onClick={() => props.onShowSchedule(props.schedule)}>Schedule</button>
+          <button onClick={() => handleEditCollectedPlant(collectedPlant.id)}>
+            Plant Settings
+          </button>
 
           <Link to={`/collected_plants/${collectedPlant.id}`}>
-            <button onClick={() => handleEdit(collectedPlant.id)}>Settings</button>
+            <button>Settings</button>
           </Link>
         </div>
       ))}
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-  

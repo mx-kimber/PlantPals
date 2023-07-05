@@ -11,38 +11,14 @@ import { SchedulesIndex } from "./SchedulesIndex"
 import { SchedulesShow } from "./SchedulesShow";
 import { CollectedPlantsIndex } from "./CollectedPlantsIndex";
 import { CollectedPlantsShow} from "./CollectedPlantsShow";
-import { CollectedPlantsEdit } from "./CollectedPlantsEdit";
 import { About } from "./About"
 
-
-export function Content(props) {
-
-
+export function Content() {
   const [errorMessage, setErrorMessage] = useState('');
 
   const [plants, setPlants] = useState([]);
   const [isPlantsShowVisible, setIsPlantsShowVisible] = useState(false);
   const [currentPlant, setCurrentPlant] = useState({});
-
-  const [schedules, setSchedules] = useState([]);
-  const [isSchedulesShowVisible, setIsSchedulesShowVisible] = useState(false);
-  const [currentSchedule, setCurrentSchedule] = useState({});
-  
-
-  const [collectedPlants, setCollectedPlants] = useState([]);
-  const [isCollectedPlantsShowVisible, setIsCollectedPlantsShowVisible] = useState(false);
-  const [currentCollectedPlant, setCurrentCollectedPlant] = useState({});
-
-  const [isCollectedPlantsEditVisible, setIsCollectedPlantsEditVisible] = useState(false);
-  
-  
-  
-  const handleClose = () => {
-    setIsPlantsShowVisible(false);
-    setIsCollectedPlantsShowVisible(false);
-    setIsCollectedPlantsEditVisible(false);
-    setIsSchedulesShowVisible(false);
-  }
 
   const handleIndexPlants = () => {
     axios.get("http://localhost:3000/plants.json")
@@ -62,6 +38,9 @@ export function Content(props) {
     setCurrentPlant(plant);
   };
 
+  const [schedules, setSchedules] = useState([]);
+  const [isSchedulesShowVisible, setIsSchedulesShowVisible] = useState(false);
+  const [currentSchedule, setCurrentSchedule] = useState({});
   const handleIndexSchedules = () => {
     console.log("handleIndexSchedules");
     axios.get("http://localhost:3000/schedules.json").then((response) => {
@@ -75,7 +54,6 @@ export function Content(props) {
      setIsSchedulesShowVisible(true);
      setCurrentSchedule(schedule);
    };
-
 
   const handleUpdateSchedule = (id, params, successCallback) => {
     console.log("handleUpdateSchedule", params);
@@ -94,6 +72,10 @@ export function Content(props) {
     });
   };
 
+  const [collectedPlants, setCollectedPlants] = useState([]);
+  const [isCollectedPlantsShowVisible, setIsCollectedPlantsShowVisible] = useState(false);
+  const [currentCollectedPlant, setCurrentCollectedPlant] = useState({});
+
   const handleIndexCollectedPlants = () => {
     console.log("Fetching collected plants");
     axios.get("http://localhost:3000/collected_plants.json")
@@ -108,90 +90,27 @@ export function Content(props) {
     setCurrentCollectedPlant(collected);
   };
  
-
-const handleEditCollectedPlant = (id, editPlant) => {
-  console.log("handleEditCollectedPlant", id, editPlant);
-  setIsCollectedPlantsEditVisible(true);
-  setCurrentCollectedPlant(editPlant);
-  setCurrentSchedule(editPlant);
-};
-
-  
-
-  const handleUpdateCollectedPlant = (id, params) => {
-    console.log("handleUpdateCollectedPlant", params);
-    axios.patch(`http://localhost:3000/collected_plants/${id}.json`, params)
-      .then((response) => {
-        setCollectedPlants(
-          collectedPlants.map((collectedPlant) => {
-            if (collectedPlant.id === response.data.id) {
-              return response.data;
-            } else {
-              return collectedPlant;
-            }
-          })
-        );
-       
-        handleClose();
-        window.location.reload(); 
-      });
-  };
-  
-
   useEffect(() => {
     handleIndexPlants();
     handleIndexCollectedPlants();
     handleIndexSchedules();
   }, []);
 
+  const handleClose = () => {
+    setIsPlantsShowVisible(false);
+    setIsCollectedPlantsShowVisible(false);
+    setIsSchedulesShowVisible(false);
+  }
 
   return (
     <div>
       {errorMessage && <p>{errorMessage}</p>}
-      
-{/* ROUTES */}
 
       <Routes>
         <Route path="/about" element={<About />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
 
-        <Route path="/collected_plants" element={
-          <CollectedPlantsIndex
-            collectedPlants={collectedPlants}
-            onShowCollectedPlant={handleShowCollectedPlant}
-            onEditCollectedPlant={handleEditCollectedPlant}
-            onShowSchedule={handleShowSchedule} 
-            onUpdateSchedule={handleUpdateSchedule}/>
-          }
-        />
-
-
-
-        <Route
-          path="/collected_plants/:id"
-          element={
-            <CollectedPlantsEdit
-              collectedPlant={currentCollectedPlant}
-              onEditCollectedPlant={handleEditCollectedPlant}
-              onUpdateCollectedPlant={handleUpdateCollectedPlant} 
-              onClose={handleClose}
-              onShowSchedule={handleShowSchedule} 
-              onUpdateSchedule={handleUpdateSchedule}
-
-              
-            />
-          }
-        />
-        <Route path ="/schedules" element={
-          <SchedulesIndex 
-            schedules={schedules} 
-            onShowSchedule={handleShowSchedule} 
-            onUpdateSchedule={handleUpdateSchedule}
-            />
-          }
-        />
-        
         <Route path="/plants" element={
             <PlantsIndex 
               plants={plants} 
@@ -200,43 +119,47 @@ const handleEditCollectedPlant = (id, editPlant) => {
           }
         />
 
+        <Route path="/collected_plants" element={
+          <CollectedPlantsIndex
+            collectedPlants={collectedPlants}
+            onShowCollectedPlant={handleShowCollectedPlant}
+            onShowSchedule={handleShowSchedule} />
+          }
+        />
+
+        <Route path ="/schedules" element={
+          <SchedulesIndex 
+            schedules={schedules} 
+            onShowSchedule={handleShowSchedule} 
+            onUpdateSchedule={handleUpdateSchedule} />
+          }
+        />
       </Routes>  
      
-{/* MODALS  */}
+    {/* MODALS  */}
   
-    <Modal show={isPlantsShowVisible} onClose={handleClose}>
+    <Modal show={isPlantsShowVisible} 
+      onClose={handleClose}>
       <PlantsShow 
-        plant={currentPlant} />
-    </Modal>
-
-    <Modal show={isCollectedPlantsShowVisible} 
-    onClose={handleClose}>
-      <CollectedPlantsShow 
-        collectedPlant={currentCollectedPlant}
-        onClose={handleClose}
+        plant={currentPlant} 
       />
-    </Modal>
-    
-
-    <Modal show={isCollectedPlantsEditVisible} 
-    onClose={handleClose}>      
-      <CollectedPlantsEdit 
-      collectedPlant={currentCollectedPlant}
-      onEditCollectedPlant={handleEditCollectedPlant}
-      />
-      
-       
     </Modal>
 
     <Modal show={isSchedulesShowVisible} 
       onClose={handleClose}>
       <SchedulesShow 
         schedule={currentSchedule} 
-        onShowSchedule={handleShowSchedule}
         onUpdateSchedule={handleUpdateSchedule}
       />
     </Modal>
 
+    <Modal show={isCollectedPlantsShowVisible} 
+      onClose={handleClose}>
+      <CollectedPlantsShow 
+        collectedPlant={currentCollectedPlant}
+      />
+    </Modal>
+    
    </div>
   );
 }

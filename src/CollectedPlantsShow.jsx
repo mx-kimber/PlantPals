@@ -1,19 +1,6 @@
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 
 export function CollectedPlantsShow(props) {
-  const navigate = useNavigate();
-
-  const handleEdit = () => {
-    props.onClose();
-    navigate(`/collected_plants/${props.collectedPlant.id}`);
-  };
-
-  const handleEditSchedule = () => {
-    props.onClose();
-    navigate(`/schedule/${props.collectedPlant.schedule.id}`);
-  };
-
+ 
   return (
     <div>
       <h1>Collected Plant</h1>
@@ -25,34 +12,28 @@ export function CollectedPlantsShow(props) {
           <img src={props.collectedPlant.img} alt="No image" />
         )}
       </p>
-
+      <hr />
       <h3>Schedule</h3>
 
-      <p>{props.collectedPlant.schedule.watering_start_date}</p>
+      <ul>{props.collectedPlant.schedule.watering_start_date}</ul>
 
       <hr />
 
       <h3>Notes</h3>
-      <p>{props.collectedPlant.notes}</p>
+      <ul>{props.collectedPlant.notes}</ul>
 
       <hr />
-
-      <li>Common Name: {props.collectedPlant.common_name}</li>
-      <li>Latin Name: {props.collectedPlant.latin_name}</li>
-      <li>Category: {props.collectedPlant.category}</li>
-      <li>Watering: {props.collectedPlant.watering}</li>
-      <li>Ideal Light: {props.collectedPlant.light_ideal}</li>
-      <li>Tolerated Light: {props.collectedPlant.light_tolerated}</li>
-      <li>Climate: {props.collectedPlant.climate}</li>
-      <li>
-        Resource: <a href={props.collectedPlant.url}>{props.collectedPlant.url}</a>
-      </li>
-
-      <button onClick={handleEdit}>Collected Plant Settings</button>
-
-      <Link to={`/collected_plants/${props.collectedPlant.id}/edit_schedule`}>
-        <button onClick={handleEditSchedule}>Edit Schedule</button>
-      </Link>
+      <h3> Details </h3>
+      <ul>Common Name: {props.collectedPlant.common_name}</ul>
+      <ul>Latin Name: {props.collectedPlant.latin_name}</ul>
+      <ul>Category: {props.collectedPlant.category}</ul>
+      <ul>Watering: {props.collectedPlant.watering}</ul>
+      <ul>Ideal Light: {props.collectedPlant.light_ideal}</ul>
+      <ul>Tolerated Light: {props.collectedPlant.light_tolerated}</ul>
+      <ul>Climate: {props.collectedPlant.climate}</ul>
+      <hr />
+      <p><a href={props.collectedPlant.url}>Resource</a></p>
+      
     </div>
   );
 }

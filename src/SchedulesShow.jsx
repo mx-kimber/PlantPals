@@ -13,15 +13,13 @@ export function SchedulesShow(props) {
    
     <form onSubmit={handleSubmit}>
         <div> 
-          <p>Watering Start Date: {props.schedule.watering_start_date}</p>
+          <p>{props.schedule.collected_plant.watering}</p>
           Watering Start Date <input defaultValue={props.schedule.watering_start_date} name="name" type="text" />
         </div>
-        <div>
-          <p>Days to Water: {props.schedule.days_to_water}</p>
+        <div> 
           Days to Water: <input defaultValue={props.schedule.days_to_water} name="days_to_water" type="text" />
         </div>
-        <p>{props.schedule.collected_plant.watering}</p>
-        <button type="submit">Update Schedule</button>
+        <p><button type="submit">Update Schedule</button></p>
       </form>
     </div>
   );

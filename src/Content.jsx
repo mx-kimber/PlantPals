@@ -76,6 +76,18 @@ export function Content() {
     });
   };
 
+  const handleDestroySchedule = (schedule) => {
+    const shouldDelete = window.confirm("Are you sure you want to delete this schedule?");
+    if (shouldDelete) {
+      console.log("Deleting Schedule - OK", schedule);
+      axios.delete(`http://localhost:3000/schedules/${schedule.id}.json`).then((response) => {
+        setSchedules(schedules.filter((p) => p.id !== schedule.id));
+        handleClose();
+        window.location.reload(); 
+      });
+    }
+  };
+
   const handleIndexCollectedPlants = () => {
     console.log("Fetching collected plants - OK");
     axios.get("http://localhost:3000/collected_plants.json")
@@ -113,10 +125,9 @@ export function Content() {
         <Route path="/login" element={<Login />} />
         
         <Route path="/plants" element={
-            <PlantsIndex 
-              plants={plants} 
-              onShowPlant={handleShowPlant} 
-            />
+          <PlantsIndex 
+            plants={plants} 
+            onShowPlant={handleShowPlant} />
           }
         />
 
@@ -124,7 +135,9 @@ export function Content() {
           <CollectedPlantsIndex
             collectedPlants={collectedPlants}
             onShowCollectedPlant={handleShowCollectedPlant}
-            onShowSchedule={handleShowSchedule} />
+            // onShowSchedule={handleShowSchedule}
+            // onDestroySchedule={handleDestroySchedule} 
+            />
           }
         />
 
@@ -136,9 +149,11 @@ export function Content() {
           <SchedulesIndex 
             schedules={schedules} 
             onShowSchedule={handleShowSchedule} 
-            onUpdateSchedule={handleUpdateSchedule} />
+            onUpdateSchedule={handleUpdateSchedule} 
+            onDestroySchedule={handleDestroySchedule} />
           }
         />
+
         {/* Nesting multiple components - testing grounds */}
         <Route path="/test" element={
             <>
@@ -148,7 +163,8 @@ export function Content() {
               />
               <CollectedPlantsIndex collectedPlants={collectedPlants}
                 onShowCollectedPlant={handleShowCollectedPlant}
-                onShowSchedule={handleShowSchedule}
+                // onShowSchedule={handleShowSchedule}
+                // onDestroySchedule={handleDestroySchedule}
               />
               <AddComponent />
             </>
@@ -173,6 +189,7 @@ export function Content() {
       <SchedulesShow 
         schedule={currentSchedule} 
         onUpdateSchedule={handleUpdateSchedule}
+        onDestroySchedule={handleDestroySchedule}
       />
     </Modal>
 

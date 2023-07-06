@@ -7,9 +7,9 @@ export function CollectedPlantsShow(props) {
       <h2>{props.collectedPlant.nickname || 'Give your plant a nickname!'}</h2>
       <p>
         {props.collectedPlant.custom_image ? (
-          <img src={props.collectedPlant.custom_image} alt="No image" />
+          <img className="round-image" src={props.collectedPlant.custom_image} alt="No image" />
         ) : (
-          <img src={props.collectedPlant.img} alt="No image" />
+          <img className="round-image" src={props.collectedPlant.img} alt="No image" />
         )}
       </p>
       <hr />

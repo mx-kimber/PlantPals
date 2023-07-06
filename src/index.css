@@ -38,3 +38,19 @@ h2 {
   line-height: 1.1;
 }
 
+.rounded-image {
+  width: 200px;
+  height:200px;
+  object-fit: cover;
+  object-position:top center;
+  border-radius: 10%;
+}
+
+.round-image {
+  width: 200px;
+  height:200px;
+  object-fit: cover;
+  object-position:top center;
+  border-radius: 50%;
+  
+}

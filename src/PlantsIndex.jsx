@@ -47,7 +47,7 @@ export function PlantsIndex(props) {
       {currentPlants.map((plant) => (
         <div key={plant.id}>
           <h2>{plant.common_name}</h2>
-          <img src={plant.img} alt={plant.common_name} />
+          <img className="rounded-image" src={plant.img} alt={plant.common_name} />
           <p>Latin Name: {plant.latin_name}</p>
           <p>Watering: {plant.watering}</p>
           <p>Ideal Light: {plant.light_ideal}</p>

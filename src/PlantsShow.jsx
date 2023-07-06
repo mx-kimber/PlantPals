@@ -2,7 +2,7 @@ export function PlantsShow(props) {
   return (
     <div>
       <h1>Plant information</h1>
-      <img src={props.plant.img} alt="Plant" />
+      <img className="rounded-image" src={props.plant.img} alt="Plant" />
       <p>Common Name: {props.plant.common_name}</p>
       <p>Latin Name: {props.plant.latin_name}</p>
       <p>Category: {props.plant.category}</p>

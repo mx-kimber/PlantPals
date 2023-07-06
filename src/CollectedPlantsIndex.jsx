@@ -34,3 +34,5 @@ export function CollectedPlantsIndex({
     </div>
   );
 }
+
+export default CollectedPlantsIndex;

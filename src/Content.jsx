@@ -13,6 +13,7 @@ import { CollectedPlantsIndex } from "./CollectedPlantsIndex";
 import { CollectedPlantsShow} from "./CollectedPlantsShow";
 import { CollectedPlantShowSeparate } from "./CollectedPlantShowSeparate"
 import { About } from "./About"
+import { AddComponent } from "./AddComponent"
 
 export function Content() {
   const [errorMessage, setErrorMessage] = useState('');
@@ -89,19 +90,18 @@ export function Content() {
     setCurrentCollectedPlant(collected);
   };
 
-  
- 
-  useEffect(() => {
-    handleIndexPlants();
-    handleIndexCollectedPlants();
-    handleIndexSchedules();
-  }, []);
-
   const handleClose = () => {
     setIsPlantsShowVisible(false);
     setIsCollectedPlantsShowVisible(false);
     setIsSchedulesShowVisible(false);
   }
+  
+  useEffect(() => {
+    handleIndexPlants();
+    handleIndexCollectedPlants();
+    handleIndexSchedules();
+  }, []);
+  
 
   return (
     <div>
@@ -139,8 +139,26 @@ export function Content() {
             onUpdateSchedule={handleUpdateSchedule} />
           }
         />
+        {/* Nesting multiple components - testing grounds */}
+        <Route path="/test" element={
+            <>
+              <SchedulesIndex schedules={schedules} 
+                onShowSchedule={handleShowSchedule} 
+                onUpdateSchedule={handleUpdateSchedule} 
+              />
+              <CollectedPlantsIndex collectedPlants={collectedPlants}
+                onShowCollectedPlant={handleShowCollectedPlant}
+                onShowSchedule={handleShowSchedule}
+              />
+              <AddComponent />
+            </>
+          }       
+        />
+
+
       </Routes>  
-     
+      {/* <AddComponent /> */}
+      
     {/* MODALS  */}
   
     <Modal show={isPlantsShowVisible} 
@@ -170,5 +188,5 @@ export function Content() {
   );
 }
 
-export default Content;
+
 

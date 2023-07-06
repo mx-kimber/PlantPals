@@ -11,6 +11,7 @@ import { SchedulesIndex } from "./SchedulesIndex"
 import { SchedulesShow } from "./SchedulesShow";
 import { CollectedPlantsIndex } from "./CollectedPlantsIndex";
 import { CollectedPlantsShow} from "./CollectedPlantsShow";
+import { CollectedPlantShowSeparate } from "./CollectedPlantShowSeparate"
 import { About } from "./About"
 
 export function Content() {
@@ -19,11 +20,16 @@ export function Content() {
   const [plants, setPlants] = useState([]);
   const [isPlantsShowVisible, setIsPlantsShowVisible] = useState(false);
   const [currentPlant, setCurrentPlant] = useState({});
-
+  const [schedules, setSchedules] = useState([]);
+  const [isSchedulesShowVisible, setIsSchedulesShowVisible] = useState(false);
+  const [currentSchedule, setCurrentSchedule] = useState({});
+  const [collectedPlants, setCollectedPlants] = useState([]);
+  const [isCollectedPlantsShowVisible, setIsCollectedPlantsShowVisible] = useState(false);
+  const [currentCollectedPlant, setCurrentCollectedPlant] = useState({});
+ 
   const handleIndexPlants = () => {
     axios.get("http://localhost:3000/plants.json")
       .then((response) => {
-        console.log(response.data);
         setPlants(response.data);
       })
       .catch((error) => {
@@ -33,30 +39,27 @@ export function Content() {
   };
 
   const handleShowPlant = (plant) => {
-    console.log("handleshowPlant", plant);
+    console.log("Fetching plant - OK", plant);
     setIsPlantsShowVisible(true);
     setCurrentPlant(plant);
   };
 
-  const [schedules, setSchedules] = useState([]);
-  const [isSchedulesShowVisible, setIsSchedulesShowVisible] = useState(false);
-  const [currentSchedule, setCurrentSchedule] = useState({});
+
   const handleIndexSchedules = () => {
-    console.log("handleIndexSchedules");
+    console.log("Fetching Schedules: OK");
     axios.get("http://localhost:3000/schedules.json").then((response) => {
-      console.log(response.data);
       setSchedules(response.data);
     });
   };
 
   const handleShowSchedule = (schedule) => {
-     console.log("handleShowSchedule", schedule);
+     console.log("Showing Schedule - OK", schedule);
      setIsSchedulesShowVisible(true);
      setCurrentSchedule(schedule);
    };
 
   const handleUpdateSchedule = (id, params, successCallback) => {
-    console.log("handleUpdateSchedule", params);
+    console.log("Updating Schedule - OK", params);
     axios.patch(`http://localhost:3000/schedules/${id}.json`, params).then((response) => {
       setSchedules(
         schedules.map((schedule) => {
@@ -72,12 +75,8 @@ export function Content() {
     });
   };
 
-  const [collectedPlants, setCollectedPlants] = useState([]);
-  const [isCollectedPlantsShowVisible, setIsCollectedPlantsShowVisible] = useState(false);
-  const [currentCollectedPlant, setCurrentCollectedPlant] = useState({});
-
   const handleIndexCollectedPlants = () => {
-    console.log("Fetching collected plants");
+    console.log("Fetching collected plants - OK");
     axios.get("http://localhost:3000/collected_plants.json")
       .then((response) => {
         setCollectedPlants(response.data);
@@ -85,10 +84,12 @@ export function Content() {
   };
 
   const handleShowCollectedPlant = (collected) => {
-    console.log("Showing collected plant:", collected);
+    console.log("Showing collected plant - OK", collected);
     setIsCollectedPlantsShowVisible(true);
     setCurrentCollectedPlant(collected);
   };
+
+  
  
   useEffect(() => {
     handleIndexPlants();
@@ -110,7 +111,7 @@ export function Content() {
         <Route path="/about" element={<About />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
-
+        
         <Route path="/plants" element={
             <PlantsIndex 
               plants={plants} 
@@ -126,6 +127,10 @@ export function Content() {
             onShowSchedule={handleShowSchedule} />
           }
         />
+
+        <Route path="/collected_plants/:id" element=
+        {<CollectedPlantShowSeparate /> } />
+       
 
         <Route path ="/schedules" element={
           <SchedulesIndex 
@@ -157,10 +162,13 @@ export function Content() {
       onClose={handleClose}>
       <CollectedPlantsShow 
         collectedPlant={currentCollectedPlant}
+        onShowSchedule={currentSchedule}
       />
     </Modal>
     
    </div>
   );
 }
+
+export default Content;
 

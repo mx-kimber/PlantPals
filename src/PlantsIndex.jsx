@@ -59,8 +59,6 @@ export function PlantsIndex(props) {
     return searchTermMatch && categoryMatch;
   });
 
-  filteredPlants.sort((a, b) => a.category.localeCompare(b.category));
-
   const currentPlants = filteredPlants.slice(startIndex, endIndex);
 
   const handleNextPage = () => {

@@ -13,7 +13,7 @@ import { CollectedPlantsIndex } from "./CollectedPlantsIndex";
 import { CollectedPlantsShow} from "./CollectedPlantsShow";
 import { CollectedPlantShowSeparate } from "./CollectedPlantShowSeparate"
 import { About } from "./About"
-import { AddComponent } from "./AddComponent"
+// import { AddComponent } from "./AddComponent"
 
 export function Content() {
   const [errorMessage, setErrorMessage] = useState('');
@@ -135,15 +135,14 @@ export function Content() {
           <CollectedPlantsIndex
             collectedPlants={collectedPlants}
             onShowCollectedPlant={handleShowCollectedPlant}
-            // onShowSchedule={handleShowSchedule}
-            // onDestroySchedule={handleDestroySchedule} 
             />
           }
         />
 
-        <Route path="/collected_plants/:id" element=
-        {<CollectedPlantShowSeparate /> } />
-       
+        <Route path="/collected_plants/:id" element={
+          <CollectedPlantShowSeparate /> 
+          } 
+        />
 
         <Route path ="/schedules" element={
           <SchedulesIndex 
@@ -155,24 +154,26 @@ export function Content() {
         />
 
         {/* Nesting multiple components - testing grounds */}
+
         <Route path="/test" element={
-            <>
-              <SchedulesIndex schedules={schedules} 
-                onShowSchedule={handleShowSchedule} 
-                onUpdateSchedule={handleUpdateSchedule} 
-              />
-              <CollectedPlantsIndex collectedPlants={collectedPlants}
-                onShowCollectedPlant={handleShowCollectedPlant}
-                // onShowSchedule={handleShowSchedule}
-                // onDestroySchedule={handleDestroySchedule}
-              />
-              <AddComponent />
+          <>
+            <SchedulesIndex schedules={schedules} 
+              onShowSchedule={handleShowSchedule}              
+            />
+            <CollectedPlantsIndex 
+              collectedPlants={collectedPlants}
+              onShowCollectedPlant= {handleShowCollectedPlant}            
+            />
+            <PlantsIndex 
+              plants={plants} 
+                onShowPlant={handleShowPlant} />
             </>
           }       
         />
 
 
-      </Routes>  
+      </Routes> 
+       
       {/* <AddComponent /> */}
       
     {/* MODALS  */}
@@ -197,7 +198,6 @@ export function Content() {
       onClose={handleClose}>
       <CollectedPlantsShow 
         collectedPlant={currentCollectedPlant}
-        onShowSchedule={currentSchedule}
       />
     </Modal>
     

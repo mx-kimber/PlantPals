@@ -103,29 +103,28 @@ export function Content() {
     setCurrentCollectedPlant(collected);
   };
 
-   const handleUpdateCollectedPlant = (id, params, successCallback) => {
-       console.log("handling edit collected plant -OK", params);
-       axios.patch(`http://localhost:3000/collected_plants/${id}.json`, params).then((response) => {
-         setCollectedPlants(
-           collectedPlants.map((collectedPlant) => {
-             if (collectedPlant.id === response.data.id) {
-               return response.data;
-             } else {
-               return collectedPlant;
-             }
-           })
-         );
-         successCallback();
-         handleClose();
-         
-       });
-     };
+  const handleUpdateCollectedPlant = (id, params, successCallback) => {
+    console.log("handling edit collected plant -OK", params);
+    axios.patch(`http://localhost:3000/collected_plants/${id}.json`, params).then((response) => {
+      setCollectedPlants(
+        collectedPlants.map((collectedPlant) => {
+          if (collectedPlant.id === response.data.id) {
+            return response.data;
+          } else {
+            return collectedPlant;
+          }
+        })
+      );
+      successCallback();
+      handleClose();
+    });
+  };
 
-     const handleEditCollectedPlant = (collected) => {
-      console.log("Showing collected plant edit - OK", collected);
-      setCurrentCollectedPlant(collected);
-      setIsCollectedPlantEditVisible(true);
-    };
+  const handleEditCollectedPlant = (collected) => {
+    console.log("Showing collected plant edit - OK", collected);
+    setCurrentCollectedPlant(collected);
+    setIsCollectedPlantEditVisible(true);
+  };
 
   const handleClose = () => {
     setIsPlantsShowVisible(false);

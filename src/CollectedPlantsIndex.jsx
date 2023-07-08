@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './Index.css'
+import './Index.css';
 
 export function CollectedPlantsIndex({
   collectedPlants,
   onShowCollectedPlant,
   // onShowSchedule,
+  onEditCollectedPlant, 
 
 }) {
   
@@ -18,7 +19,9 @@ export function CollectedPlantsIndex({
           <h2>{collectedPlant.nickname || collectedPlant.common_name || collectedPlant.latin_name}</h2>
 
           <Link to={`/collected_plants/${collectedPlant.id}`}>
-            <img className="rounded-image" src={collectedPlant.custom_image || collectedPlant.img}
+            <img
+              className="rounded-image"
+              src={collectedPlant.custom_image || collectedPlant.img}
               alt="No image"
               // onClick={() =>onShowCollectedPlant(collectedPlant)}
             /> 
@@ -28,6 +31,10 @@ export function CollectedPlantsIndex({
           
           <button onClick={() => onShowCollectedPlant(collectedPlant)}>
             All info
+          </button>
+
+          <button onClick={() => onEditCollectedPlant(collectedPlant)}>
+            Edit
           </button>
         </div>
       ))}

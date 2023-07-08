@@ -151,22 +151,30 @@ export function Content() {
         <Route path="/login" element={<Login />} />
         
         <Route path="/plants" element={
-          <PlantsIndex 
-            plants={plants} 
-            onShowPlant={handleShowPlant} />
+          <>
+            <PlantsIndex 
+              plants={plants} 
+              onShowPlant={handleShowPlant} />
+            <PlantsShow 
+              plant={currentPlant} />
+          </>
           }
         />
 
         <Route path="/collected_plants" element={
-          <CollectedPlantsIndex
-            collectedPlants={collectedPlants}
-            onShowCollectedPlant={handleShowCollectedPlant}
-            onEditCollectedPlant={handleEditCollectedPlant}
-            onUpdateCollectedPlant={handleUpdateCollectedPlant}
-            />
-         
-          
-           }
+          <>
+            <CollectedPlantsIndex
+              collectedPlants={collectedPlants}
+              onShowCollectedPlant={handleShowCollectedPlant}
+              onEditCollectedPlant={handleEditCollectedPlant}
+              onUpdateCollectedPlant={handleUpdateCollectedPlant}
+              />
+            <CollectedPlantEdit
+              collectedPlant={currentCollectedPlant}
+              onEditCollectedPlant={handleEditCollectedPlant}
+              onUpdateCollectedPlant={handleUpdateCollectedPlant} />
+          </>
+          }
         />
 
 

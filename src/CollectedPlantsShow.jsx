@@ -1,4 +1,3 @@
-
 export function CollectedPlantsShow(props) {
  
   return (

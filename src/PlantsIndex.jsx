@@ -107,13 +107,12 @@ export function PlantsIndex(props) {
 
       {currentPlants.map((plant) => (
         <div key={plant.id}>
-          <h2>{plant.common_name}</h2>
-          <img className="rounded-image" src={plant.img} alt={plant.common_name} />
-          <p>Latin Name: {plant.latin_name}</p>
-          <p>Watering: {plant.watering}</p>
-          <p>Ideal Light: {plant.light_ideal}</p>
-          <p>Category: {plant.category}</p>
-          <button onClick={() => props.onShowPlant(plant)}>More info</button>
+          <h2>{plant.common_name || plant.latin_name}</h2>
+          <img className="rounded-image" 
+            src={plant.img} 
+            alt={plant.common_name} />
+
+          <p><button onClick={() => props.onShowPlant(plant)}>More info</button></p>
         </div>
       ))}
 

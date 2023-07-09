@@ -46,18 +46,20 @@ export function PlantsIndex(props) {
     setSearchTerm('');
   };
 
-  const filteredPlants = plants.filter((plant) => {
-    const searchTermMatch =
-      searchTerm === '' ||
-      plant.common_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      plant.latin_name.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredPlants = plants
+    ? plants.filter((plant) => {
+        const searchTermMatch =
+          searchTerm === '' ||
+          (plant.common_name && plant.common_name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+          (plant.latin_name && plant.latin_name.toLowerCase().includes(searchTerm.toLowerCase()));
 
-    const categoryMatch =
-      selectedCategory === '' ||
-      plant.category.toLowerCase().includes(selectedCategory.toLowerCase());
+        const categoryMatch =
+          selectedCategory === '' ||
+          (plant.category && plant.category.toLowerCase().includes(selectedCategory.toLowerCase()));
 
-    return searchTermMatch && categoryMatch;
-  });
+        return searchTermMatch && categoryMatch;
+      })
+    : [];
 
   const currentPlants = filteredPlants.slice(startIndex, endIndex);
 
@@ -110,7 +112,7 @@ export function PlantsIndex(props) {
           <h2>{plant.common_name || plant.latin_name}</h2>
           <img className="rounded-image" 
             src={plant.img} 
-            alt={plant.common_name} />
+            alt={plant.common_name || plant.latin_name} />
 
           <p><button onClick={() => props.onShowPlant(plant)}>More info</button></p>
         </div>

@@ -12,9 +12,7 @@ export function CollectedPlantsShow(props) {
         )}
       </p>
       <hr />
-      <h3>SCHEDULE</h3>
-        <ul>{props.collectedPlant.schedule.watering_start_date}</ul>
-      <hr />
+      
       <h3>NOTES</h3>
         <ul>{props.collectedPlant.notes}</ul>
 

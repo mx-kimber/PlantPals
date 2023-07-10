@@ -77,6 +77,10 @@ export function PlantsIndex(props) {
     });
   };
 
+  const handleShowPlant = (plant) => {
+    props.onShowPlant(plant);
+  };
+
   return (
     <div>
       <h1>All Plants</h1>
@@ -118,11 +122,12 @@ export function PlantsIndex(props) {
       {currentPlants.map((plant) => (
         <div key={plant.id}>
           <h2>{plant.common_name || plant.latin_name}</h2>
-          <img className="rounded-image" 
-            src={plant.img} 
-            alt={plant.common_name || plant.latin_name} />
-
-          <p><button onClick={() => props.onShowPlant(plant)}>More info</button></p>
+          <img
+            className="rounded-image"
+            src={plant.img}
+            alt={plant.common_name || plant.latin_name}
+            onClick={() => handleShowPlant(plant)}
+          />
         </div>
       ))}
 

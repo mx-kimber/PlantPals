@@ -30,8 +30,16 @@ export function Content() {
   const [isCollectedPlantEditVisible, setIsCollectedPlantEditVisible] = useState(false);
   
   const handleIndexPlants = () => {
+    console.log("Fetching plants - OK");
+    const startTime = new Date().getTime();
+  
     axios.get("http://localhost:3000/plants.json")
       .then((response) => {
+        const endTime = new Date().getTime();
+        const duration = endTime - startTime;
+        const durationInSeconds = duration / 1000;
+          console.log("API/Plants Index loaded in", durationInSeconds, "seconds");
+  
         setPlants(response.data);
         const firstPlant = response.data[0]
         setCurrentPlant(firstPlant);
@@ -44,7 +52,7 @@ export function Content() {
 
   const handleShowPlant = async (plant) => {
     console.log("Fetching plant - OK", plant);
-    setIsPlantsShowVisible(true);
+    setIsPlantsShowVisible(false);
     if (currentPlant !== plant) {
       setCurrentPlant(plant);
     }

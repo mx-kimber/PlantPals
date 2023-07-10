@@ -107,6 +107,14 @@ export function PlantsIndex(props) {
         </label>
       </div>
 
+      {filteredPlants.length === 0 && searchTerm !== '' ? (
+        <p>No Plants Found</p>
+      ) : (
+        filteredPlants.length === 0 && (
+          <p>Loading...</p>
+        )
+      )}
+
       {currentPlants.map((plant) => (
         <div key={plant.id}>
           <h2>{plant.common_name || plant.latin_name}</h2>

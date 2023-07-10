@@ -105,30 +105,37 @@ export function Content() {
     axios.get("http://localhost:3000/collected_plants.json")
       .then((response) => {
         setCollectedPlants(response.data);
+        const firstCollectedPlant = response.data[0]
+        setCurrentCollectedPlant(firstCollectedPlant);
       });
   };
 
-  const handleShowCollectedPlant = (collected) => {
+  const handleShowCollectedPlant = async(collected) => {
     console.log("Showing collected plant - OK", collected);
-    setIsCollectedPlantsShowVisible(true);
-    setCurrentCollectedPlant(collected);
+    setIsCollectedPlantsShowVisible(false);
+    if (currentCollectedPlant !== collected) {
+      setCurrentCollectedPlant(collected);
+    }
   };
 
   const handleUpdateCollectedPlant = (id, params, successCallback) => {
-    console.log("handling edit collected plant -OK", params);
-    axios.patch(`http://localhost:3000/collected_plants/${id}.json`, params).then((response) => {
-      setCollectedPlants(
-        collectedPlants.map((collectedPlant) => {
-          if (collectedPlant.id === response.data.id) {
-            return response.data;
-          } else {
-            return collectedPlant;
-          }
-        })
-      );
-      successCallback();
-      handleClose();
-    });
+    console.log("Handling edit collected plant - OK", params);
+    axios.patch(`http://localhost:3000/collected_plants/${id}.json`, params)
+      .then((response) => {
+        setCollectedPlants((prevCollectedPlants) => {
+          const updatedCollectedPlants = prevCollectedPlants.map((collectedPlant) => {
+            if (collectedPlant.id === response.data.id) {
+              return response.data;
+            } else {
+              return collectedPlant;
+            }
+          });
+          setCurrentCollectedPlant(response.data);
+          return updatedCollectedPlants;
+        });
+        successCallback();
+        handleClose();
+      });
   };
 
   const handleEditCollectedPlant = (collected) => {
@@ -179,10 +186,13 @@ export function Content() {
               onEditCollectedPlant={handleEditCollectedPlant}
               onUpdateCollectedPlant={handleUpdateCollectedPlant}
               />
-            <CollectedPlantEdit
+            <CollectedPlantsShow
+              collectedPlant={currentCollectedPlant}
+              />
+               {/* <CollectedPlantEdit
               collectedPlant={currentCollectedPlant}
               onEditCollectedPlant={handleEditCollectedPlant}
-              onUpdateCollectedPlant={handleUpdateCollectedPlant} />
+              onUpdateCollectedPlant={handleUpdateCollectedPlant} /> */}
           </>
           }
         />

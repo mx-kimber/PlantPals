@@ -33,6 +33,8 @@ export function Content() {
     axios.get("http://localhost:3000/plants.json")
       .then((response) => {
         setPlants(response.data);
+        const firstPlant = response.data[0]
+        setCurrentPlant(firstPlant);
       })
       .catch((error) => {
         console.error(error);
@@ -40,12 +42,13 @@ export function Content() {
       });
   };
 
-  const handleShowPlant = (plant) => {
+  const handleShowPlant = async (plant) => {
     console.log("Fetching plant - OK", plant);
     setIsPlantsShowVisible(true);
-    setCurrentPlant(plant);
+    if (currentPlant !== plant) {
+      setCurrentPlant(plant);
+    }
   };
-
 
   const handleIndexSchedules = () => {
     console.log("Fetching Schedules: OK");

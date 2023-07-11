@@ -71,9 +71,15 @@ export function Content() {
     console.log("Showing Schedule - OK", schedule);
     setIsSchedulesShowVisible(true);
     if (currentSchedule !== schedule) {
-      setCurrentSchedule(schedule); 
+      setCurrentSchedule(schedule);
     }
+    // Log the parameters passed to the function
+    console.log("Parameters:", schedule);
+    // Log additional information
+    console.log("Is Schedules Show Visible?", isSchedulesShowVisible);
+    console.log("Current Schedule:", currentSchedule);
   };
+  
   
 
   const handleUpdateSchedule = (id, params, successCallback) => {
@@ -214,9 +220,14 @@ const handleIndexCollectedPlants = () => {
               onShowCollectedPlant={handleShowCollectedPlant}
               onEditCollectedPlant={handleEditCollectedPlant}
               onUpdateCollectedPlant={handleUpdateCollectedPlant}
+              
+              onShowSchedule={handleShowSchedule}
+              schedule={currentSchedule}
+              
             />
             <CollectedPlantsShow
               collectedPlant={currentCollectedPlant}
+              
             />
           </>
           }

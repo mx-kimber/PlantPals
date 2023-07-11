@@ -62,14 +62,19 @@ export function Content() {
     console.log("Fetching Schedules: OK");
     axios.get("http://localhost:3000/schedules.json").then((response) => {
       setSchedules(response.data);
+      const firstSchedule = response.data[0];
+        setCurrentSchedule(firstSchedule); // Update to setCurrentCollectedPlant
     });
   };
 
   const handleShowSchedule = (schedule) => {
-     console.log("Showing Schedule - OK", schedule);
-     setIsSchedulesShowVisible(true);
-     setCurrentSchedule(schedule);
-   };
+    console.log("Showing Schedule - OK", schedule);
+    setIsSchedulesShowVisible(true);
+    if (currentSchedule !== schedule) {
+      setCurrentSchedule(schedule); 
+    }
+  };
+  
 
   const handleUpdateSchedule = (id, params, successCallback) => {
     console.log("Updating Schedule - OK", params);
@@ -85,6 +90,7 @@ export function Content() {
       );
       successCallback();
       handleClose();
+      window.location.reload();
     });
   };
 
@@ -100,15 +106,30 @@ export function Content() {
     }
   };
 
-  const handleIndexCollectedPlants = () => {
-    console.log("Fetching collected plants - OK");
-    axios.get("http://localhost:3000/collected_plants.json")
-      .then((response) => {
-        setCollectedPlants(response.data);
-        const firstCollectedPlant = response.data[0]
-        setCurrentCollectedPlant(firstCollectedPlant);
-      });
-  };
+const handleIndexCollectedPlants = () => {
+  console.log("Fetching collected plants - OK");
+  axios.get("http://localhost:3000/collected_plants.json")
+    .then((response) => {
+      const collectedPlantsData = response.data;
+      setCollectedPlants(collectedPlantsData);
+      
+      const firstCollectedPlant = collectedPlantsData[0];
+      setCurrentCollectedPlant(firstCollectedPlant);
+      
+      const collectedPlantIds = collectedPlantsData.map((collectedPlant) => collectedPlant.id);
+      axios.get(`http://localhost:3000/schedules.json?collected_plant_ids=${collectedPlantIds.join(',')}`)
+        .then((response) => {
+          const schedulesData = response.data;
+          setSchedules(schedulesData);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+};
 
   const handleShowCollectedPlant = async(collected) => {
     console.log("Showing collected plant - OK", collected);
@@ -135,13 +156,16 @@ export function Content() {
         });
         successCallback();
         handleClose();
+        window.location.reload();
       });
   };
 
-  const handleEditCollectedPlant = (collected) => {
+  const handleEditCollectedPlant = (collected, successCallback) => {
     console.log("Showing collected plant edit - OK", collected);
     setCurrentCollectedPlant(collected);
     setIsCollectedPlantEditVisible(true);
+    successCallback();
+    window.location.reload();
   };
 
   const handleClose = () => {
@@ -180,27 +204,22 @@ export function Content() {
 
         <Route path="/collected_plants" element={
           <>
+            <SchedulesShow 
+              schedule={currentSchedule} 
+              onUpdateSchedule={handleUpdateSchedule}
+              onDestroySchedule={handleDestroySchedule}
+              />
             <CollectedPlantsIndex
               collectedPlants={collectedPlants}
               onShowCollectedPlant={handleShowCollectedPlant}
               onEditCollectedPlant={handleEditCollectedPlant}
               onUpdateCollectedPlant={handleUpdateCollectedPlant}
-              />
+            />
             <CollectedPlantsShow
               collectedPlant={currentCollectedPlant}
-              />
-               {/* <CollectedPlantEdit
-              collectedPlant={currentCollectedPlant}
-              onEditCollectedPlant={handleEditCollectedPlant}
-              onUpdateCollectedPlant={handleUpdateCollectedPlant} /> */}
+            />
           </>
           }
-        />
-
-
-        <Route path="/collected_plants/:id" element={
-          <CollectedPlantShowSeparate /> 
-          } 
         />
 
         <Route path ="/schedules" element={
@@ -211,29 +230,7 @@ export function Content() {
             onDestroySchedule={handleDestroySchedule} />
           }
         />
-
-        {/* Nesting multiple components - testing grounds */}
-
-        <Route path="/test" element={
-          <>
-            <SchedulesIndex schedules={schedules} 
-              onShowSchedule={handleShowSchedule}              
-            />
-            <CollectedPlantsIndex 
-              collectedPlants={collectedPlants}
-              onShowCollectedPlant= {handleShowCollectedPlant}            
-            />
-            <PlantsIndex 
-              plants={plants} 
-                onShowPlant={handleShowPlant} />
-            </>
-          }       
-        />
-
-
-      </Routes> 
-      
-      {/* <AddComponent /> */}
+        </Routes>
       
     {/* MODALS  */}
   

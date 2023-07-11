@@ -5,10 +5,12 @@ export function CollectedPlantsIndex({
   collectedPlants,
   onShowCollectedPlant,
   onEditCollectedPlant,
+  onShowSchedule
 }) {
 
   const handleImageClick = (collectedPlant) => {
     onShowCollectedPlant(collectedPlant);
+    onShowSchedule(collectedPlant.id)
   };
 
   return (
@@ -29,6 +31,7 @@ export function CollectedPlantsIndex({
           <button onClick={() => onEditCollectedPlant(collectedPlant)}>
             Edit
           </button>
+          <button onClick={() => onShowSchedule(collectedPlant)}>Edit Schedule</button>
         </div>
       ))}
     </div>

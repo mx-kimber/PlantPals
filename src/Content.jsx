@@ -9,13 +9,14 @@ import { PlantsIndex } from "./PlantsIndex";
 import { PlantsShow } from "./PlantsShow";
 import { SchedulesIndex } from "./SchedulesIndex";
 import { SchedulesShow } from "./SchedulesShow";
+import { SchedulesNew } from './SchedulesNew';
 import { CollectedPlantsIndex } from "./CollectedPlantsIndex";
 import { CollectedPlantsShow } from "./CollectedPlantsShow";
 import { About } from "./About";
 import { CollectedPlantEdit } from "./CollectedPlantEdit";
 
 export function Content() {
-  
+
   const [errorMessage, setErrorMessage] = useState('');
   const [plants, setPlants] = useState([]);
   const [isPlantsShowVisible, setIsPlantsShowVisible] = useState(false);
@@ -77,6 +78,14 @@ export function Content() {
     console.log("Current Schedule:", currentSchedule);
   };
 
+  const handleCreateSchedule = (params, successCallback) => {
+    console.log("handleCreateSchedule", params);
+    axios.post("http://localhost:3000/schedules.json", params).then((response) => {
+      setSchedules([...schedules, response.data]);
+      successCallback();
+    });
+  };
+
   const handleUpdateSchedule = (id, params, successCallback) => {
     console.log("Updating Schedule - OK", params);
     axios.patch(`http://localhost:3000/schedules/${id}.json`, params).then((response) => {
@@ -125,7 +134,7 @@ const handleIndexCollectedPlants = () => {
 
   const handleShowCollectedPlant = async(collected) => {
     console.log("Showing collected plant - OK", collected);
-    setIsCollectedPlantsShowVisible(false);
+    setIsCollectedPlantsShowVisible(true);
     if (currentCollectedPlant !== collected) {
       setCurrentCollectedPlant(collected);
     }
@@ -205,6 +214,8 @@ const handleIndexCollectedPlants = () => {
             <CollectedPlantsShow
               collectedPlant={currentCollectedPlant} 
             />
+            <SchedulesNew 
+              onCreateSchedule={handleCreateSchedule}/>
           </>
           }
         />

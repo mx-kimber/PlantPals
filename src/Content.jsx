@@ -224,7 +224,8 @@ export function Content() {
               onCreateSchedule={handleCreateScheduleModal}
             />
             <CollectedPlantsShow
-              collectedPlant={currentCollectedPlant} 
+              collectedPlant={currentCollectedPlant}
+              onCreateSchedule={handleCreateScheduleModal}
             />
           </>
           }

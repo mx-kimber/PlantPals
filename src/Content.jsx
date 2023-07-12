@@ -161,12 +161,12 @@ const handleIndexCollectedPlants = () => {
       });
   };
 
-  const handleEditCollectedPlant = (collected, successCallback) => {
+  const handleEditCollectedPlant = (collected) => {
     console.log("Showing collected plant edit - OK", collected);
     setCurrentCollectedPlant(collected);
     setIsCollectedPlantEditVisible(true);
-    successCallback();
-    window.location.reload();
+    
+    
   };
 
   const handleClose = () => {

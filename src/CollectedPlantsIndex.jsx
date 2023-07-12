@@ -5,12 +5,27 @@ export function CollectedPlantsIndex({
   collectedPlants,
   onShowCollectedPlant,
   onEditCollectedPlant,
-  onShowSchedule
+  onCreateSchedule,
 }) {
-
   const handleImageClick = (collectedPlant) => {
     onShowCollectedPlant(collectedPlant);
-    onShowSchedule(collectedPlant.id)
+  };
+
+  const renderSchedule = (collectedPlant) => {
+    if (collectedPlant.schedule?.watering_start_date) {
+      return (
+        <>
+          <p>Watering Schedule:</p>
+          <p>{collectedPlant.schedule.watering_start_date}</p>
+        </>
+      );
+    } else {
+      return (
+       <p><button onClick={() => onCreateSchedule(collectedPlant)}>
+          Create Schedule
+        </button></p>
+      );
+    }
   };
 
   return (
@@ -26,12 +41,10 @@ export function CollectedPlantsIndex({
             alt="No image"
             onClick={() => handleImageClick(collectedPlant)}
           />
-          <p>Schedule: {collectedPlant.schedule?.watering_start_date}</p>
-          
+          {renderSchedule(collectedPlant)}
           <button onClick={() => onEditCollectedPlant(collectedPlant)}>
             Edit
           </button>
-          <button onClick={() => onShowSchedule(collectedPlant)}>Edit Schedule</button>
         </div>
       ))}
     </div>

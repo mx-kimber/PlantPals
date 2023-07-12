@@ -83,7 +83,10 @@ export function Content() {
     console.log("handleCreateSchedule", params);
     axios.post("http://localhost:3000/schedules.json", params).then((response) => {
       setSchedules([...schedules, response.data]);
+      
       successCallback();
+      handleClose();
+      window.location.reload();
     });
   };
 

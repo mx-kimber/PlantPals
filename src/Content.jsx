@@ -80,15 +80,19 @@ export function Content() {
   };
 
   const handleCreateSchedule = (params, successCallback) => {
-    console.log("handleCreateSchedule", params);
+    console.log("handleCreateSchedule - params:", params);
     axios.post("http://localhost:3000/schedules.json", params).then((response) => {
+      console.log("handleCreateSchedule - response:", response.data);
       setSchedules([...schedules, response.data]);
-      
+  
       successCallback();
       handleClose();
       window.location.reload();
+    }).catch((error) => {
+      console.log("handleCreateSchedule - error:", error);
     });
   };
+  
 
   const handleCreateScheduleModal = (getCreateForm) => {
     console.log("Showing schedule create - OK", getCreateForm);

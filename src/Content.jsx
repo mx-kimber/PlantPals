@@ -11,13 +11,12 @@ import { SchedulesIndex } from "./SchedulesIndex";
 import { SchedulesShow } from "./SchedulesShow";
 import { CollectedPlantsIndex } from "./CollectedPlantsIndex";
 import { CollectedPlantsShow } from "./CollectedPlantsShow";
-import { CollectedPlantShowSeparate } from "./CollectedPlantShowSeparate";
 import { About } from "./About";
 import { CollectedPlantEdit } from "./CollectedPlantEdit";
 
 export function Content() {
+  
   const [errorMessage, setErrorMessage] = useState('');
-
   const [plants, setPlants] = useState([]);
   const [isPlantsShowVisible, setIsPlantsShowVisible] = useState(false);
   const [currentPlant, setCurrentPlant] = useState({});
@@ -63,7 +62,7 @@ export function Content() {
     axios.get("http://localhost:3000/schedules.json").then((response) => {
       setSchedules(response.data);
       const firstSchedule = response.data[0];
-        setCurrentSchedule(firstSchedule); // Update to setCurrentCollectedPlant
+        setCurrentSchedule(firstSchedule);
     });
   };
 
@@ -73,14 +72,10 @@ export function Content() {
     if (currentSchedule !== schedule) {
       setCurrentSchedule(schedule);
     }
-    // Log the parameters passed to the function
     console.log("Parameters:", schedule);
-    // Log additional information
     console.log("Is Schedules Show Visible?", isSchedulesShowVisible);
     console.log("Current Schedule:", currentSchedule);
   };
-  
-  
 
   const handleUpdateSchedule = (id, params, successCallback) => {
     console.log("Updating Schedule - OK", params);
@@ -122,15 +117,6 @@ const handleIndexCollectedPlants = () => {
       const firstCollectedPlant = collectedPlantsData[0];
       setCurrentCollectedPlant(firstCollectedPlant);
       
-      const collectedPlantIds = collectedPlantsData.map((collectedPlant) => collectedPlant.id);
-      axios.get(`http://localhost:3000/schedules.json?collected_plant_ids=${collectedPlantIds.join(',')}`)
-        .then((response) => {
-          const schedulesData = response.data;
-          setSchedules(schedulesData);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
     })
     .catch((error) => {
       console.error(error);
@@ -210,24 +196,14 @@ const handleIndexCollectedPlants = () => {
 
         <Route path="/collected_plants" element={
           <>
-            <SchedulesShow 
-              schedule={currentSchedule} 
-              onUpdateSchedule={handleUpdateSchedule}
-              onDestroySchedule={handleDestroySchedule}
-              />
             <CollectedPlantsIndex
               collectedPlants={collectedPlants}
               onShowCollectedPlant={handleShowCollectedPlant}
               onEditCollectedPlant={handleEditCollectedPlant}
               onUpdateCollectedPlant={handleUpdateCollectedPlant}
-              
-              onShowSchedule={handleShowSchedule}
-              schedule={currentSchedule}
-              
             />
             <CollectedPlantsShow
-              collectedPlant={currentCollectedPlant}
-              
+              collectedPlant={currentCollectedPlant} 
             />
           </>
           }
@@ -261,13 +237,13 @@ const handleIndexCollectedPlants = () => {
       />
     </Modal>
 
-    <Modal show={isCollectedPlantsShowVisible} 
+    {/* <Modal show={isCollectedPlantsShowVisible} 
       onClose={handleClose}>
       <CollectedPlantsShow 
         collectedPlant={currentCollectedPlant}
 
       />
-    </Modal>
+    </Modal> */}
 
     <Modal show={isCollectedPlantEditVisible} onClose={handleClose}>
         <CollectedPlantEdit

@@ -23,6 +23,7 @@ export function Content() {
   const [currentPlant, setCurrentPlant] = useState({});
   const [schedules, setSchedules] = useState([]);
   const [isSchedulesShowVisible, setIsSchedulesShowVisible] = useState(false);
+  const [isSchedulesCreateModalVisible, setIsSchedulesCreateModalVisible] = useState(false);
   const [currentSchedule, setCurrentSchedule] = useState({});
   const [collectedPlants, setCollectedPlants] = useState([]);
   const [isCollectedPlantsShowVisible, setIsCollectedPlantsShowVisible] = useState(false);
@@ -86,6 +87,12 @@ export function Content() {
     });
   };
 
+  const handleCreateScheduleModal = (getCreateForm) => {
+    console.log("Showing schedule create - OK", getCreateForm);
+    setCurrentCollectedPlant(getCreateForm);
+    setIsSchedulesCreateModalVisible(true);
+  };
+
   const handleUpdateSchedule = (id, params, successCallback) => {
     console.log("Updating Schedule - OK", params);
     axios.patch(`http://localhost:3000/schedules/${id}.json`, params).then((response) => {
@@ -116,25 +123,25 @@ export function Content() {
     }
   };
 
-const handleIndexCollectedPlants = () => {
-  console.log("Fetching collected plants - OK");
-  axios.get("http://localhost:3000/collected_plants.json")
-    .then((response) => {
-      const collectedPlantsData = response.data;
-      setCollectedPlants(collectedPlantsData);
-      
-      const firstCollectedPlant = collectedPlantsData[0];
-      setCurrentCollectedPlant(firstCollectedPlant);
-      
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-};
+  const handleIndexCollectedPlants = () => {
+    console.log("Fetching collected plants - OK");
+    axios.get("http://localhost:3000/collected_plants.json")
+      .then((response) => {
+        const collectedPlantsData = response.data;
+        setCollectedPlants(collectedPlantsData);
+        
+        const firstCollectedPlant = collectedPlantsData[0];
+        setCurrentCollectedPlant(firstCollectedPlant);
+        
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   const handleShowCollectedPlant = async(collected) => {
     console.log("Showing collected plant - OK", collected);
-    setIsCollectedPlantsShowVisible(true);
+    setIsCollectedPlantsShowVisible(false);
     if (currentCollectedPlant !== collected) {
       setCurrentCollectedPlant(collected);
     }
@@ -174,6 +181,7 @@ const handleIndexCollectedPlants = () => {
     setIsCollectedPlantsShowVisible(false);
     setIsSchedulesShowVisible(false);
     setIsCollectedPlantEditVisible(false);
+    setIsSchedulesCreateModalVisible(false);
   }
   
   useEffect(() => {
@@ -210,12 +218,11 @@ const handleIndexCollectedPlants = () => {
               onShowCollectedPlant={handleShowCollectedPlant}
               onEditCollectedPlant={handleEditCollectedPlant}
               onUpdateCollectedPlant={handleUpdateCollectedPlant}
+              onCreateSchedule={handleCreateScheduleModal}
             />
             <CollectedPlantsShow
               collectedPlant={currentCollectedPlant} 
             />
-            <SchedulesNew 
-              onCreateSchedule={handleCreateSchedule}/>
           </>
           }
         />
@@ -248,22 +255,31 @@ const handleIndexCollectedPlants = () => {
       />
     </Modal>
 
-    {/* <Modal show={isCollectedPlantsShowVisible} 
+    <Modal show={isCollectedPlantsShowVisible} 
       onClose={handleClose}>
       <CollectedPlantsShow 
         collectedPlant={currentCollectedPlant}
 
       />
-    </Modal> */}
+    </Modal>
 
-    <Modal show={isCollectedPlantEditVisible} onClose={handleClose}>
-        <CollectedPlantEdit
-          collectedPlant={currentCollectedPlant}
-          onEditCollectedPlant={handleEditCollectedPlant}
-          onUpdateCollectedPlant={handleUpdateCollectedPlant}
-        />
-      </Modal>
+    <Modal show={isCollectedPlantEditVisible}
+      onClose={handleClose}>
+      <CollectedPlantEdit
+        collectedPlant={currentCollectedPlant}
+        onEditCollectedPlant={handleEditCollectedPlant}
+        onUpdateCollectedPlant={handleUpdateCollectedPlant}
+      />
+    </Modal>
     
+    <Modal show={isSchedulesCreateModalVisible} 
+      onClose={handleClose}>
+      <SchedulesNew
+        collectedPlant={currentCollectedPlant}
+        onCreateSchedule={handleCreateSchedule}
+      />
+    </Modal>
+   
    </div>
   );
 }

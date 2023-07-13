@@ -15,6 +15,8 @@ import { CollectedPlantsShow } from "./CollectedPlantsShow";
 import { About } from "./About";
 import { CollectedPlantEdit } from "./CollectedPlantEdit";
 
+import { CollectedPlantsNoSchedule } from "./CollectedPlantsNoSchedule";
+
 export function Content() {
 
   const [errorMessage, setErrorMessage] = useState('');
@@ -234,16 +236,22 @@ export function Content() {
           </>
           }
         />
-
-        <Route path ="/schedules" element={
-          <SchedulesIndex 
-            schedules={schedules} 
-            onShowSchedule={handleShowSchedule} 
-            onUpdateSchedule={handleUpdateSchedule} 
-            onDestroySchedule={handleDestroySchedule} />
+        
+        <Route path ="/schedules/dashboard" element={
+          <>
+            <SchedulesIndex 
+              schedules={schedules} 
+              onShowSchedule={handleShowSchedule} 
+              onUpdateSchedule={handleUpdateSchedule} 
+              onDestroySchedule={handleDestroySchedule} />
+           <CollectedPlantsNoSchedule
+              collectedPlants={collectedPlants}
+              onUpdateCollectedPlant={handleUpdateCollectedPlant}
+              onCreateSchedule={handleCreateScheduleModal} />
+          </>
           }
         />
-        </Routes>
+      </Routes>
       
     {/* MODALS  */}
   

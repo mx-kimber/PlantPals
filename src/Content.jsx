@@ -10,6 +10,8 @@ import { PlantsShow } from "./PlantsShow";
 import { SchedulesIndex } from "./SchedulesIndex";
 import { SchedulesShow } from "./SchedulesShow";
 import { SchedulesNew } from './SchedulesNew';
+
+import { CollectedPlantsNew } from "./CollectedPlantsNew";
 import { CollectedPlantsIndex } from "./CollectedPlantsIndex";
 import { CollectedPlantsShow } from "./CollectedPlantsShow";
 import { About } from "./About";
@@ -29,6 +31,7 @@ export function Content() {
   const [currentSchedule, setCurrentSchedule] = useState({});
   const [collectedPlants, setCollectedPlants] = useState([]);
   const [isCollectedPlantsShowVisible, setIsCollectedPlantsShowVisible] = useState(false);
+  const [isCollectedPlantsNewVisible, setIsCollectedPlantsVisible] = useState(false);
   const [currentCollectedPlant, setCurrentCollectedPlant] = useState({});
   const [isCollectedPlantEditVisible, setIsCollectedPlantEditVisible] = useState(false);
   
@@ -156,6 +159,12 @@ export function Content() {
     }
   };
 
+  const handleEditCollectedPlant = (collected) => {
+    console.log("Showing collected plant edit - OK", collected);
+    setCurrentCollectedPlant(collected);
+    setIsCollectedPlantEditVisible(true);
+  };
+
   const handleUpdateCollectedPlant = (id, params, successCallback) => {
     console.log("Handling edit collected plant - OK", params);
     axios.patch(`http://localhost:3000/collected_plants/${id}.json`, params)
@@ -177,13 +186,21 @@ export function Content() {
       });
   };
 
-  const handleEditCollectedPlant = (collected) => {
-    console.log("Showing collected plant edit - OK", collected);
-    setCurrentCollectedPlant(collected);
-    setIsCollectedPlantEditVisible(true);
-    
-    
+  const handleCreateCollectedPlant = (params, successCallback) => {
+    console.log("handleCreateCollectedPlant - params:", params);
+  
+    axios.post("http://localhost:3000/collected_plants.json", params)
+      .then((response) => {
+        console.log("handleCreateCollectedPlant - response:", response.data);
+        setCollectedPlants([...collectedPlants, response.data]);
+        successCallback();
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.error("handleCreateCollectedPlant - error:", error);
+      });
   };
+  
 
   const handleClose = () => {
     setIsPlantsShowVisible(false);
@@ -210,15 +227,22 @@ export function Content() {
         <Route path="/login" element={<Login />} />
         
         <Route path="/plants" element={
-          <>
-            <PlantsIndex 
-              plants={plants} 
-              onShowPlant={handleShowPlant} />
-            <PlantsShow 
-              plant={currentPlant} />
-          </>
-          }
-        />
+      <>
+        <PlantsIndex 
+          plants={plants} 
+          onShowPlant={handleShowPlant}
+          onCreateCollectedPlant={handleCreateCollectedPlant}
+          />
+        <PlantsShow 
+          plant={currentPlant}
+          onCreateCollectedPlant={handleCreateCollectedPlant}
+          /> 
+          <CollectedPlantsNew 
+          plant={currentPlant}
+          onCreateCollectedPlant={handleCreateCollectedPlant} />
+      </>
+    } />
+
 
         <Route path="/collected_plants" element={
           <>
@@ -251,6 +275,13 @@ export function Content() {
           </>
           }
         />
+
+        <Route path="/collected_plants/new" element={
+        <CollectedPlantsNew 
+          plant={currentPlant}
+          onCreateCollectedPlant={handleCreateCollectedPlant} />
+        }
+      />
       </Routes>
       
     {/* MODALS  */}
@@ -259,6 +290,7 @@ export function Content() {
       onClose={handleClose}>
       <PlantsShow 
         plant={currentPlant} 
+        onCreateCollectedPlant={handleCreateCollectedPlant}
       />
     </Modal>
 
@@ -293,6 +325,14 @@ export function Content() {
       <SchedulesNew
         collectedPlant={currentCollectedPlant}
         onCreateSchedule={handleCreateSchedule}
+      />
+    </Modal>
+
+    <Modal show={isCollectedPlantsNewVisible} 
+      onClose={handleClose}>
+      <CollectedPlantsNew
+        onCreateCollectedPlant={handleCreateCollectedPlant}
+        
       />
     </Modal>
    

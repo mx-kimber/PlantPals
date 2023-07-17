@@ -121,6 +121,7 @@ export function PlantsIndex(props) {
 
       {currentPlants.map((plant) => (
         <div key={plant.id}>
+          <p>{plant.id}</p>
           <h2>{plant.common_name || plant.latin_name}</h2>
           <img
             className="rounded-image"

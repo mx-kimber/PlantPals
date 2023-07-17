@@ -1,4 +1,10 @@
+import React from 'react';
+
 export function CollectedPlantsShow({ collectedPlant, onCreateSchedule }) {
+  if (!collectedPlant) {
+    return <h1>Nothing in your collection!</h1>;
+  }
+
   const wateringStartDate = collectedPlant.schedule?.watering_start_date;
 
   const renderSchedule = () => {

@@ -28,10 +28,12 @@ export function CollectedPlantsIndex({
     }
   };
 
+  const reversedCollectedPlants = [...collectedPlants].reverse();
+
   return (
     <div id="collected-plants-index">
       <h1>Plant Collection</h1>
-      {collectedPlants.map((collectedPlant) => (
+      {reversedCollectedPlants.map((collectedPlant) => (
         <div key={collectedPlant.id}>
           
           <h2>{collectedPlant.nickname || collectedPlant.common_name || collectedPlant.latin_name}</h2>

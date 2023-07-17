@@ -129,6 +129,7 @@ export function PlantsIndex(props) {
             alt={plant.common_name || plant.latin_name}
             onClick={() => handleShowPlant(plant)}
           />
+          <button onClick={props.onCreateCollectedPlant}>Add New Collected Plant</button>
         </div>
       ))}
 

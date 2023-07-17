@@ -31,7 +31,7 @@ export function Content() {
   const [currentSchedule, setCurrentSchedule] = useState({});
   const [collectedPlants, setCollectedPlants] = useState([]);
   const [isCollectedPlantsShowVisible, setIsCollectedPlantsShowVisible] = useState(false);
-  const [isCollectedPlantsNewVisible, setIsCollectedPlantsVisible] = useState(false);
+  const [isCollectedPlantsNewVisible, setIsCollectedPlantsNewVisible] = useState(false);
   const [currentCollectedPlant, setCurrentCollectedPlant] = useState({});
   const [isCollectedPlantEditVisible, setIsCollectedPlantEditVisible] = useState(false);
   
@@ -205,6 +205,10 @@ export function Content() {
         console.error("handleCreateCollectedPlant - error:", error);
       });
   };
+
+  const handleShowCollectedPlantsNew = () => {
+    setIsCollectedPlantsNewVisible(true);
+  };
   
 
   const handleClose = () => {
@@ -213,6 +217,7 @@ export function Content() {
     setIsSchedulesShowVisible(false);
     setIsCollectedPlantEditVisible(false);
     setIsSchedulesCreateModalVisible(false);
+    setIsCollectedPlantsNewVisible(false);
   }
   
   useEffect(() => {
@@ -232,20 +237,17 @@ export function Content() {
         <Route path="/login" element={<Login />} />
         
         <Route path="/plants" element={
-      <>
-        <PlantsIndex 
-          plants={plants} 
-          onShowPlant={handleShowPlant}
-          onCreateCollectedPlant={handleCreateCollectedPlant}
-          />
-        <PlantsShow 
-          plant={currentPlant}
-          onCreateCollectedPlant={handleCreateCollectedPlant}
-          /> 
-          <CollectedPlantsNew 
-          plant={currentPlant}
-          onCreateCollectedPlant={handleCreateCollectedPlant} />
-      </>
+       <>
+              <PlantsIndex
+                plants={plants}
+                onShowPlant={handleShowPlant}
+                onCreateCollectedPlant={handleShowCollectedPlantsNew}
+              />
+              <PlantsShow
+                plant={currentPlant}
+                onCreateCollectedPlant={handleCreateCollectedPlant}
+              />
+            </>
     } />
 
 
@@ -333,11 +335,10 @@ export function Content() {
       />
     </Modal>
 
-    <Modal show={isCollectedPlantsNewVisible} 
+    <Modal show={isCollectedPlantsNewVisible}
       onClose={handleClose}>
-      <CollectedPlantsNew
-        onCreateCollectedPlant={handleCreateCollectedPlant}
-        
+      <CollectedPlantsNew 
+        onCreateCollectedPlant={handleCreateCollectedPlant} 
       />
     </Modal>
    

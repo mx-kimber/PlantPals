@@ -21,9 +21,11 @@ export function CollectedPlantsIndex({
       );
     } else {
       return (
-       <p><button onClick={() => onCreateSchedule(collectedPlant)}>
-          Create Schedule
-        </button></p>
+        <p>
+          <button onClick={() => onCreateSchedule(collectedPlant)}>
+            Create Schedule
+          </button>
+        </p>
       );
     }
   };

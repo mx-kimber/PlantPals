@@ -140,22 +140,27 @@ export function Content() {
     axios.get("http://localhost:3000/collected_plants.json")
       .then((response) => {
         const collectedPlantsData = response.data;
-        setCollectedPlants(collectedPlantsData);
-        
-        const firstCollectedPlant = collectedPlantsData[0];
-        setCurrentCollectedPlant(firstCollectedPlant);
-        
+        const sortedCollectedPlants = collectedPlantsData.sort((a, b) => {
+          return new Date(b.createdAt) - new Date(a.createdAt);
+        });
+        setCollectedPlants(sortedCollectedPlants);
+        if (sortedCollectedPlants.length > 0) {
+          const lastCollectedPlant = sortedCollectedPlants[sortedCollectedPlants.length - 1];
+          setCurrentCollectedPlant(lastCollectedPlant);
+        }
       })
       .catch((error) => {
         console.error(error);
       });
   };
-
-  const handleShowCollectedPlant = async(collected) => {
-    console.log("Showing collected plant - OK", collected);
+  
+  
+  const handleShowCollectedPlant = async () => {
+    console.log("Showing collected plant - OK");
     setIsCollectedPlantsShowVisible(false);
-    if (currentCollectedPlant !== collected) {
-      setCurrentCollectedPlant(collected);
+    if (collectedPlants.length > 0) {
+      const lastCollectedPlant = collectedPlants[collectedPlants.length - 1];
+      setCurrentCollectedPlant(lastCollectedPlant);
     }
   };
 

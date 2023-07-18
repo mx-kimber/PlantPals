@@ -31,6 +31,7 @@ export function PlantsShow(props) {
       <p>Tolerated Light: {props.plant.light_tolerated}</p>
       <p>Climate: {props.plant.climate}</p>
       <p>Resource: <a href={props.plant.url}>{props.plant.url}</a></p>
+      <button onClick={props.onCreateCollectedPlant}>Add to collection</button>
     </div>
   );
 }

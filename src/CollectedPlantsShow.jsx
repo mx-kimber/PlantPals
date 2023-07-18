@@ -2,7 +2,7 @@ import React from 'react';
 
 export function CollectedPlantsShow({ collectedPlant, onCreateSchedule }) {
   if (!collectedPlant || Object.keys(collectedPlant).length === 0) {
-    return <h1>No plants collecteted yet</h1>;
+    return <h1>No plants collected yet</h1>;
   }
 
   const wateringStartDate = collectedPlant.schedule?.watering_start_date;

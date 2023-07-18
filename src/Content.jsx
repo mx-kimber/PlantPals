@@ -244,7 +244,7 @@ export function Content() {
             />
             <PlantsShow
               plant={currentPlant}
-              onCreateCollectedPlant={handleCreateCollectedPlant}
+              onCreateCollectedPlant={handleShowCollectedPlantsNew}
             />
          </>
     } />
@@ -323,6 +323,10 @@ export function Content() {
         collectedPlant={currentCollectedPlant}
         onEditCollectedPlant={handleEditCollectedPlant}
         onUpdateCollectedPlant={handleUpdateCollectedPlant}
+      />
+       <SchedulesNew
+        collectedPlant={currentCollectedPlant}
+        onCreateSchedule={handleCreateSchedule}
       />
     </Modal>
     

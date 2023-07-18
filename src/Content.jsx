@@ -155,12 +155,11 @@ export function Content() {
   };
   
   
-  const handleShowCollectedPlant = async () => {
-    console.log("Showing collected plant - OK");
+  const handleShowCollectedPlant = async(collected) => {
+    console.log("Showing collected plant - OK", collected);
     setIsCollectedPlantsShowVisible(false);
-    if (collectedPlants.length > 0) {
-      const lastCollectedPlant = collectedPlants[collectedPlants.length - 1];
-      setCurrentCollectedPlant(lastCollectedPlant);
+    if (currentCollectedPlant !== collected) {
+      setCurrentCollectedPlant(collected);
     }
   };
 
@@ -237,17 +236,17 @@ export function Content() {
         <Route path="/login" element={<Login />} />
         
         <Route path="/plants" element={
-       <>
-              <PlantsIndex
-                plants={plants}
-                onShowPlant={handleShowPlant}
-                onCreateCollectedPlant={handleShowCollectedPlantsNew}
-              />
-              <PlantsShow
-                plant={currentPlant}
-                onCreateCollectedPlant={handleCreateCollectedPlant}
-              />
-            </>
+         <>
+            <PlantsIndex
+              plants={plants}
+              onShowPlant={handleShowPlant}
+              onCreateCollectedPlant={handleShowCollectedPlantsNew}
+            />
+            <PlantsShow
+              plant={currentPlant}
+              onCreateCollectedPlant={handleCreateCollectedPlant}
+            />
+         </>
     } />
 
 
@@ -283,12 +282,12 @@ export function Content() {
           }
         />
 
-        <Route path="/collected_plants/new" element={
+        {/* <Route path="/collected_plants/new" element={
         <CollectedPlantsNew 
           plant={currentPlant}
           onCreateCollectedPlant={handleCreateCollectedPlant} />
         }
-      />
+      /> */}
       </Routes>
       
     {/* MODALS  */}

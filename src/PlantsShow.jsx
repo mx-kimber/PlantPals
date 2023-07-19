@@ -19,6 +19,17 @@ export function PlantsShow(props) {
     return <div>Loading...</div>;
   }
 
+  const handleCreateCollectedPlant = () => {
+    const params = {
+      plant_id: props.plant.id,
+      
+    };
+
+    props.onCreateCollectedPlant(params, () => {
+      // note to self: callback logic to open a confirmation modal here?
+    });
+  };
+
   return (
     <div>
       <h1>Plant information</h1>
@@ -31,7 +42,7 @@ export function PlantsShow(props) {
       <p>Tolerated Light: {props.plant.light_tolerated}</p>
       <p>Climate: {props.plant.climate}</p>
       <p>Resource: <a href={props.plant.url}>{props.plant.url}</a></p>
-      <button onClick={props.onCreateCollectedPlant}>Add to collection</button>
+      <button onClick={handleCreateCollectedPlant}>Add to collection</button>
     </div>
   );
 }

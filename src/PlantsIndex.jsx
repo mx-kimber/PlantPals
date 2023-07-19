@@ -121,7 +121,7 @@ export function PlantsIndex(props) {
 
       {currentPlants.map((plant) => (
         <div key={plant.id}>
-          <p>{plant.id}</p>
+          {/* <p>{plant.id}</p> */}
           <h2>{plant.common_name || plant.latin_name}</h2>
           <img
             className="rounded-image"
@@ -129,7 +129,6 @@ export function PlantsIndex(props) {
             alt={plant.common_name || plant.latin_name}
             onClick={() => handleShowPlant(plant)}
           />
-          <button onClick={props.onCreateCollectedPlant}>Add New Collected Plant</button>
         </div>
       ))}
 

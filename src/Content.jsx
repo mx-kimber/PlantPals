@@ -196,9 +196,8 @@ export function Content() {
     axios.post("http://localhost:3000/collected_plants.json", params)
       .then((response) => {
         console.log("handleCreateCollectedPlant - response:", response.data);
-        setCollectedPlants([...collectedPlants, response.data]);
+        setCollectedPlants((prevCollectedPlants) => [...prevCollectedPlants, response.data]);
         successCallback();
-        window.location.reload();
       })
       .catch((error) => {
         console.error("handleCreateCollectedPlant - error:", error);
@@ -236,17 +235,21 @@ export function Content() {
         <Route path="/login" element={<Login />} />
         
         <Route path="/plants" element={
-         <>
-            <PlantsIndex
-              plants={plants}
-              onShowPlant={handleShowPlant}
-              onCreateCollectedPlant={handleShowCollectedPlantsNew}
-            />
-            <PlantsShow
-              plant={currentPlant}
-              onCreateCollectedPlant={handleShowCollectedPlantsNew}
-            />
-         </>
+          <>
+          <PlantsIndex
+            plants={plants}
+            onShowPlant={handleShowPlant}
+            onCreateCollectedPlant={handleShowCollectedPlantsNew}
+          />
+          <PlantsShow
+            plant={currentPlant}
+            onCreateCollectedPlant={(params) =>
+              handleCreateCollectedPlant(params, () => {
+                // note to self: handle opening a confirmation modal?
+              })
+            }
+          />
+        </>
     } />
 
 

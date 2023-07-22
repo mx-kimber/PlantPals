@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Signup } from "./Signup";
 import { Login } from "./Login";
@@ -20,7 +20,8 @@ import { CollectedPlantEdit } from "./CollectedPlantEdit";
 import { CollectedPlantsNoSchedule } from "./CollectedPlantsNoSchedule";
 
 export function Content() {
-
+  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [plants, setPlants] = useState([]);
   const [isPlantsShowVisible, setIsPlantsShowVisible] = useState(false);
@@ -35,7 +36,14 @@ export function Content() {
   const [currentCollectedPlant, setCurrentCollectedPlant] = useState({});
   const [isCollectedPlantEditVisible, setIsCollectedPlantEditVisible] = useState(false);
   
-  const handleIndexPlants = () => {
+  const handleLoginSuccess = (jwt) => {
+    localStorage.setItem("jwt", jwt);
+    axios.defaults.headers.common["Authorization"] = `Bearer ${jwt}`;
+    setIsLoggedIn(true);
+    navigate("/plants");
+  };
+
+  const handleIndexPlants = async () => {
     console.log("Fetching plants - OK");
     const startTime = new Date().getTime();
   
@@ -64,7 +72,7 @@ export function Content() {
     }
   };
 
-  const handleIndexSchedules = () => {
+  const handleIndexSchedules = async () => {
     console.log("Fetching Schedules: OK");
     axios.get("http://localhost:3000/schedules.json").then((response) => {
       setSchedules(response.data);
@@ -135,7 +143,7 @@ export function Content() {
     }
   };
 
-  const handleIndexCollectedPlants = () => {
+  const handleIndexCollectedPlants = async () => {
     console.log("Fetching collected plants - OK");
     axios.get("http://localhost:3000/collected_plants.json")
       .then((response) => {
@@ -219,10 +227,30 @@ export function Content() {
   }
   
   useEffect(() => {
-    handleIndexPlants();
-    handleIndexCollectedPlants();
-    handleIndexSchedules();
-  }, []);
+    const checkAuthentication = async () => {
+      try {
+        const jwt = localStorage.getItem("jwt");
+        if (jwt) {
+          axios.defaults.headers.common["Authorization"] = `Bearer ${jwt}`;
+        }
+        setIsLoggedIn(!!jwt);
+        if (isLoggedIn) {
+          axios.defaults.headers.common["Authorization"] = `Bearer ${jwt}`;
+          handleIndexPlants();
+          handleIndexCollectedPlants();
+          handleIndexSchedules();
+
+          navigate("/plants");
+        }
+      } catch (error) {
+        console.error("Error checking authentication:", error);
+        setIsLoggedIn(false); 
+      }
+    };
+
+    checkAuthentication();
+  }, [isLoggedIn]);
+
   
 
   return (
@@ -232,65 +260,81 @@ export function Content() {
       <Routes>
         <Route path="/about" element={<About />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
-        
-        <Route path="/plants" element={
-          <>
-          <PlantsIndex
-            plants={plants}
-            onShowPlant={handleShowPlant}
-            onCreateCollectedPlant={handleShowCollectedPlantsNew}
-          />
-          <PlantsShow
-            plant={currentPlant}
-            onCreateCollectedPlant={(params) =>
-              handleCreateCollectedPlant(params, () => {
-                // note to self: handle opening a confirmation modal?
-              })
-            }
-          />
-        </>
-    } />
-
-
-        <Route path="/collected_plants" element={
-          <>
-            <CollectedPlantsIndex
-              collectedPlants={collectedPlants}
-              onShowCollectedPlant={handleShowCollectedPlant}
-              onEditCollectedPlant={handleEditCollectedPlant}
-              onUpdateCollectedPlant={handleUpdateCollectedPlant}
-              onCreateSchedule={handleCreateScheduleModal}
-            />
-            <CollectedPlantsShow
-              collectedPlant={currentCollectedPlant}
-              onCreateSchedule={handleCreateScheduleModal}
-            />
-          </>
-          }
+        <Route
+          path="/login"
+          element={<Login onLoginSuccess={handleLoginSuccess} />}
         />
-        
-        <Route path ="/schedules/dashboard" element={
-          <>
-            <SchedulesIndex 
-              schedules={schedules} 
-              onShowSchedule={handleShowSchedule} 
-              onUpdateSchedule={handleUpdateSchedule} 
-              onDestroySchedule={handleDestroySchedule} />
-           <CollectedPlantsNoSchedule
-              collectedPlants={collectedPlants}
-              onUpdateCollectedPlant={handleUpdateCollectedPlant}
-              onCreateSchedule={handleCreateScheduleModal} />
-          </>
+
+        <Route
+          path="/plants"
+          element={
+            isLoggedIn ? (
+              <>
+                <PlantsIndex
+                  plants={plants}
+                  onShowPlant={handleShowPlant}
+                  onCreateCollectedPlant={handleShowCollectedPlantsNew}
+                />
+                <PlantsShow
+                  plant={currentPlant}
+                  onCreateCollectedPlant={(params) =>
+                    handleCreateCollectedPlant(params, () => {
+                      // note to self: handle opening a confirmation modal?
+                    })
+                  }
+                />
+              </>
+            ) : (
+              <Navigate to="/login" />
+            )
           }
         />
 
-        {/* <Route path="/collected_plants/new" element={
-        <CollectedPlantsNew 
-          plant={currentPlant}
-          onCreateCollectedPlant={handleCreateCollectedPlant} />
-        }
-      /> */}
+        <Route
+          path="/collected_plants"
+          element={
+            isLoggedIn ? (
+              <>
+                <CollectedPlantsIndex
+                  collectedPlants={collectedPlants}
+                  onShowCollectedPlant={handleShowCollectedPlant}
+                  onEditCollectedPlant={handleEditCollectedPlant}
+                  onUpdateCollectedPlant={handleUpdateCollectedPlant}
+                  onCreateSchedule={handleCreateScheduleModal}
+                />
+                <CollectedPlantsShow
+                  collectedPlant={currentCollectedPlant}
+                  onCreateSchedule={handleCreateScheduleModal}
+                />
+              </>
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+
+        <Route
+          path="/schedules/dashboard"
+          element={
+            isLoggedIn ? (
+              <>
+                <SchedulesIndex
+                  schedules={schedules}
+                  onShowSchedule={handleShowSchedule}
+                  onUpdateSchedule={handleUpdateSchedule}
+                  onDestroySchedule={handleDestroySchedule}
+                />
+                <CollectedPlantsNoSchedule
+                  collectedPlants={collectedPlants}
+                  onUpdateCollectedPlant={handleUpdateCollectedPlant}
+                  onCreateSchedule={handleCreateScheduleModal}
+                />
+              </>
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
       </Routes>
       
     {/* MODALS  */}

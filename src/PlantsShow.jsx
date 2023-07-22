@@ -1,28 +1,8 @@
-import React, { useState, useEffect } from 'react';
-
 export function PlantsShow(props) {
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const delay = 4000;
-
-    const timeoutId = setTimeout(() => {
-      setIsLoading(false);
-    }, delay);
-
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, []);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
+  
   const handleCreateCollectedPlant = () => {
     const params = {
       plant_id: props.plant.id,
-      
     };
 
     props.onCreateCollectedPlant(params, () => {
@@ -46,4 +26,3 @@ export function PlantsShow(props) {
     </div>
   );
 }
-

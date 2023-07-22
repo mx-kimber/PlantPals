@@ -23,6 +23,7 @@ export function Content() {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [dataLoaded, setDataLoaded] = useState(false);
   const [plants, setPlants] = useState([]);
   const [isPlantsShowVisible, setIsPlantsShowVisible] = useState(false);
   const [currentPlant, setCurrentPlant] = useState({});
@@ -45,23 +46,22 @@ export function Content() {
 
   const handleIndexPlants = async () => {
     console.log("Fetching plants - OK");
-    const startTime = new Date().getTime();
-  
-    axios.get("http://localhost:3000/plants.json")
-      .then((response) => {
-        const endTime = new Date().getTime();
-        const duration = endTime - startTime;
-        const durationInSeconds = duration / 1000;
-          console.log("API/Plants Index loaded in", durationInSeconds, "seconds");
-  
-        setPlants(response.data);
-        const firstPlant = response.data[0]
-        setCurrentPlant(firstPlant);
-      })
-      .catch((error) => {
-        console.error(error);
-        setErrorMessage('Please Log in');
-      });
+    try {
+      const startTime = new Date().getTime();
+      const response = await axios.get("http://localhost:3000/plants.json");
+      const endTime = new Date().getTime();
+      const duration = endTime - startTime;
+      const durationInSeconds = duration / 1000;
+      console.log("API/Plants Index loaded in", durationInSeconds, "seconds");
+
+      setPlants(response.data);
+      const firstPlant = response.data[0];
+      setCurrentPlant(firstPlant);
+      setDataLoaded(true); 
+    } catch (error) {
+      console.error(error);
+      setErrorMessage('Please Log in');
+    }
   };
 
   const handleShowPlant = async (plant) => {
@@ -275,14 +275,18 @@ export function Content() {
                   onShowPlant={handleShowPlant}
                   onCreateCollectedPlant={handleShowCollectedPlantsNew}
                 />
-                <PlantsShow
-                  plant={currentPlant}
-                  onCreateCollectedPlant={(params) =>
-                    handleCreateCollectedPlant(params, () => {
-                      // note to self: handle opening a confirmation modal?
-                    })
-                  }
-                />
+                {dataLoaded ? (
+                  <PlantsShow
+                    plant={currentPlant}
+                    onCreateCollectedPlant={(params) =>
+                      handleCreateCollectedPlant(params, () => {
+                        // note to self: handle opening a confirmation modal?
+                      })
+                    }
+                  />
+                ) : (
+                  <div>Loading Plants Show...</div>
+                )}
               </>
             ) : (
               <Navigate to="/login" />

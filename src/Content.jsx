@@ -145,25 +145,24 @@ export function Content() {
 
   const handleIndexCollectedPlants = async () => {
     console.log("Fetching collected plants - OK");
-    axios.get("http://localhost:3000/collected_plants.json")
-      .then((response) => {
-        const collectedPlantsData = response.data;
-        const sortedCollectedPlants = collectedPlantsData.sort((a, b) => {
-          return new Date(b.createdAt) - new Date(a.createdAt);
-        });
-        setCollectedPlants(sortedCollectedPlants);
-        if (sortedCollectedPlants.length > 0) {
-          const lastCollectedPlant = sortedCollectedPlants[sortedCollectedPlants.length - 1];
-          setCurrentCollectedPlant(lastCollectedPlant);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
+    try {
+      const response = await axios.get("http://localhost:3000/collected_plants.json");
+      const collectedPlantsData = response.data;
+      const sortedCollectedPlants = collectedPlantsData.sort((a, b) => {
+        return new Date(b.createdAt) - new Date(a.createdAt);
       });
+      setCollectedPlants(sortedCollectedPlants);
+      if (sortedCollectedPlants.length > 0) {
+        const lastCollectedPlant = sortedCollectedPlants[sortedCollectedPlants.length - 1];
+        setCurrentCollectedPlant(lastCollectedPlant);
+      }
+      setDataLoaded(true);
+    } catch (error) {
+      console.error(error);
+    }
   };
-  
-  
-  const handleShowCollectedPlant = async(collected) => {
+
+  const handleShowCollectedPlant = async (collected) => {
     console.log("Showing collected plant - OK", collected);
     setIsCollectedPlantsShowVisible(false);
     if (currentCollectedPlant !== collected) {
@@ -306,10 +305,14 @@ export function Content() {
                   onUpdateCollectedPlant={handleUpdateCollectedPlant}
                   onCreateSchedule={handleCreateScheduleModal}
                 />
-                <CollectedPlantsShow
-                  collectedPlant={currentCollectedPlant}
-                  onCreateSchedule={handleCreateScheduleModal}
-                />
+                {dataLoaded ? (
+                  <CollectedPlantsShow
+                    collectedPlant={currentCollectedPlant}
+                    onCreateSchedule={handleCreateScheduleModal}
+                  />
+                ) : (
+                  <div>Loading Collected Plants Show...</div>
+                )}
               </>
             ) : (
               <Navigate to="/login" />

@@ -127,7 +127,7 @@ export function Content() {
       );
       successCallback();
       handleClose();
-      window.location.reload();
+      handleIndexSchedules();
     });
   };
 
@@ -135,10 +135,10 @@ export function Content() {
     const shouldDelete = window.confirm("Are you sure you want to delete this schedule?");
     if (shouldDelete) {
       console.log("Deleting Schedule - OK", schedule);
-      axios.delete(`http://localhost:3000/schedules/${schedule.id}.json`).then((response) => {
+      axios.delete(`http://localhost:3000/schedules/${schedule.id}.json`).then(() => {
         setSchedules(schedules.filter((p) => p.id !== schedule.id));
         handleClose();
-        window.location.reload(); 
+        handleIndexSchedules();
       });
     }
   };

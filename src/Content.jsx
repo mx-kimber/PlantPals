@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Signup } from "./Signup";
 import { Login } from "./Login";
@@ -22,7 +22,7 @@ import { CollectedPlantsNoSchedule } from "./CollectedPlantsNoSchedule";
 export function Content() {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  // const [errorMessage, setErrorMessage] = useState('');
   const [dataLoaded, setDataLoaded] = useState(false);
   const [plants, setPlants] = useState([]);
   const [isPlantsShowVisible, setIsPlantsShowVisible] = useState(false);
@@ -37,12 +37,12 @@ export function Content() {
   const [currentCollectedPlant, setCurrentCollectedPlant] = useState({});
   const [isCollectedPlantEditVisible, setIsCollectedPlantEditVisible] = useState(false);
   
-  const handleLoginSuccess = (jwt) => {
-    localStorage.setItem("jwt", jwt);
-    axios.defaults.headers.common["Authorization"] = `Bearer ${jwt}`;
-    setIsLoggedIn(true);
-    navigate("/plants");
-  };
+  // const handleLoginSuccess = (jwt) => {
+  //   localStorage.setItem("jwt", jwt);
+  //   axios.defaults.headers.common["Authorization"] = `Bearer ${jwt}`;
+  //   setIsLoggedIn(true);
+  //   // navigate("/plants");
+  // };
 
   const handleIndexPlants = async () => {
     console.log("Fetching plants - OK");
@@ -60,7 +60,7 @@ export function Content() {
       setDataLoaded(true); 
     } catch (error) {
       console.error(error);
-      setErrorMessage('Please Log in');
+      // setErrorMessage('Please Log in');
     }
   };
 
@@ -87,9 +87,6 @@ export function Content() {
     if (currentSchedule !== schedule) {
       setCurrentSchedule(schedule);
     }
-    console.log("Parameters:", schedule);
-    console.log("Is Schedules Show Visible?", isSchedulesShowVisible);
-    console.log("Current Schedule:", currentSchedule);
   };
 
   const handleCreateSchedule = (params, successCallback) => {
@@ -100,7 +97,7 @@ export function Content() {
   
       successCallback();
       handleClose();
-      window.location.reload();
+      handleIndexSchedules();
     }).catch((error) => {
       console.log("handleCreateSchedule - error:", error);
     });
@@ -127,7 +124,7 @@ export function Content() {
       );
       successCallback();
       handleClose();
-      handleIndexSchedules();
+      
     });
   };
 
@@ -138,7 +135,7 @@ export function Content() {
       axios.delete(`http://localhost:3000/schedules/${schedule.id}.json`).then(() => {
         setSchedules(schedules.filter((p) => p.id !== schedule.id));
         handleClose();
-        handleIndexSchedules();
+        window.location.reload();
       });
     }
   };
@@ -193,7 +190,7 @@ export function Content() {
         });
         successCallback();
         handleClose();
-        window.location.reload();
+       
       });
   };
 
@@ -205,6 +202,8 @@ export function Content() {
         console.log("handleCreateCollectedPlant - response:", response.data);
         setCollectedPlants((prevCollectedPlants) => [...prevCollectedPlants, response.data]);
         successCallback();
+        handleClose();
+        // note to self: set "congrats" modal to true (modal should have timeout)
       })
       .catch((error) => {
         console.error("handleCreateCollectedPlant - error:", error);
@@ -226,48 +225,24 @@ export function Content() {
   }
   
   useEffect(() => {
-    const checkAuthentication = async () => {
-      try {
-        const jwt = localStorage.getItem("jwt");
-        if (jwt) {
-          axios.defaults.headers.common["Authorization"] = `Bearer ${jwt}`;
-        }
-        setIsLoggedIn(!!jwt);
-        if (isLoggedIn) {
-          axios.defaults.headers.common["Authorization"] = `Bearer ${jwt}`;
-          handleIndexPlants();
-          handleIndexCollectedPlants();
-          handleIndexSchedules();
-
-          navigate("/plants");
-        }
-      } catch (error) {
-        console.error("Error checking authentication:", error);
-        setIsLoggedIn(false); 
-      }
-    };
-
-    checkAuthentication();
-  }, [isLoggedIn]);
-
-  
+    handleIndexPlants();
+    handleIndexCollectedPlants();
+    handleIndexSchedules();
+  }, []);
 
   return (
     <div>
-      {errorMessage && <p>{errorMessage}</p>}
+      {/* {errorMessage && <p>{errorMessage}</p>} */}
 
       <Routes>
         <Route path="/about" element={<About />} />
         <Route path="/signup" element={<Signup />} />
-        <Route
-          path="/login"
-          element={<Login onLoginSuccess={handleLoginSuccess} />}
-        />
+        <Route path="/login" element={<Login/>} />
 
         <Route
           path="/plants"
           element={
-            isLoggedIn ? (
+            
               <>
                 <PlantsIndex
                   plants={plants}
@@ -287,16 +262,14 @@ export function Content() {
                   <div>Loading Plants Show...</div>
                 )}
               </>
-            ) : (
-              <Navigate to="/login" />
-            )
+           
           }
         />
 
         <Route
           path="/collected_plants"
           element={
-            isLoggedIn ? (
+            
               <>
                 <CollectedPlantsIndex
                   collectedPlants={collectedPlants}
@@ -310,16 +283,15 @@ export function Content() {
                   onCreateSchedule={handleCreateScheduleModal}
                 />
               </>
-            ) : (
-              <Navigate to="/login" />
-            )
+           
+            
           }
         />
 
         <Route
           path="/schedules/dashboard"
           element={
-            isLoggedIn ? (
+           
               <>
                 <SchedulesIndex
                   schedules={schedules}
@@ -333,9 +305,8 @@ export function Content() {
                   onCreateSchedule={handleCreateScheduleModal}
                 />
               </>
-            ) : (
-              <Navigate to="/login" />
-            )
+            
+            
           }
         />
       </Routes>

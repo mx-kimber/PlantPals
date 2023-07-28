@@ -1,13 +1,10 @@
+import React, { useContext, useState } from "react";
 import axios from "axios";
-import { useState } from "react";
-
-const jwt = localStorage.getItem("jwt");
-if (jwt) {
-  axios.defaults.headers.common["Authorization"] = `Bearer ${jwt}`;
-}
+import { UserContext } from "./UserContext";
 
 export function Login() {
   const [errors, setErrors] = useState([]);
+  const { setCurrentUser } = useContext(UserContext);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -19,6 +16,7 @@ export function Login() {
         console.log(response.data);
         axios.defaults.headers.common["Authorization"] = "Bearer " + response.data.jwt;
         localStorage.setItem("jwt", response.data.jwt);
+        setCurrentUser(response.data.user);
         event.target.reset();
         window.location.href = "/plants";
       })

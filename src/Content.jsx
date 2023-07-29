@@ -1,8 +1,9 @@
 import axios from "axios";
-import { Routes, Route, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
 import { Signup } from "./Signup";
 import { Login } from "./Login";
+import { UserContext } from "./UserContext";
 
 import { Modal } from "./Modal";
 import { PlantsIndex } from "./PlantsIndex";
@@ -20,8 +21,8 @@ import { CollectedPlantEdit } from "./CollectedPlantEdit";
 import { CollectedPlantsNoSchedule } from "./CollectedPlantsNoSchedule";
 
 export function Content() {
-  const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const navigate = useNavigate();
+  const { currentUser } = useContext(UserContext);
   // const [errorMessage, setErrorMessage] = useState('');
   const [dataLoaded, setDataLoaded] = useState(false);
   const [plants, setPlants] = useState([]);
@@ -37,12 +38,6 @@ export function Content() {
   const [currentCollectedPlant, setCurrentCollectedPlant] = useState({});
   const [isCollectedPlantEditVisible, setIsCollectedPlantEditVisible] = useState(false);
   
-  // const handleLoginSuccess = (jwt) => {
-  //   localStorage.setItem("jwt", jwt);
-  //   axios.defaults.headers.common["Authorization"] = `Bearer ${jwt}`;
-  //   setIsLoggedIn(true);
-  //   // navigate("/plants");
-  // };
 
   const handleIndexPlants = async () => {
     console.log("Fetching plants - OK");
@@ -242,7 +237,7 @@ export function Content() {
         <Route
           path="/plants"
           element={
-            
+            currentUser ? (
               <>
                 <PlantsIndex
                   plants={plants}
@@ -262,7 +257,9 @@ export function Content() {
                   <div>Loading Plants Show...</div>
                 )}
               </>
-           
+            ) : (
+              <Navigate to="/plants" />
+            )
           }
         />
 
@@ -270,6 +267,7 @@ export function Content() {
           path="/collected_plants"
           element={
             
+            currentUser ? (
               <>
                 <CollectedPlantsIndex
                   collectedPlants={collectedPlants}
@@ -283,15 +281,16 @@ export function Content() {
                   onCreateSchedule={handleCreateScheduleModal}
                 />
               </>
-           
-            
+            ) : (
+              <Navigate to="/collected_plants" />
+            )
           }
         />
 
         <Route
           path="/schedules/dashboard"
           element={
-           
+            currentUser ? (
               <>
                 <SchedulesIndex
                   schedules={schedules}
@@ -305,8 +304,9 @@ export function Content() {
                   onCreateSchedule={handleCreateScheduleModal}
                 />
               </>
-            
-            
+            ) : (
+              <Navigate to="/schedules/dashboard" />
+            )
           }
         />
       </Routes>

@@ -4,7 +4,7 @@ import { useState, useEffect, useContext } from "react";
 import { Signup } from "./Signup";
 import { Login } from "./Login";
 import { UserContext } from "./UserContext";
-
+import { AuthModal } from "./AuthModal"
 import { Modal } from "./Modal";
 import { PlantsIndex } from "./PlantsIndex";
 import { PlantsShow } from "./PlantsShow";
@@ -314,10 +314,10 @@ export function Content() {
     {/* MODALS  */}
 
     {!currentUser && (
-        <Modal show={isLoginModalVisible} 
+        <AuthModal show={isLoginModalVisible} 
           onClose={handleClose}>
             <Login />
-        </Modal>
+        </AuthModal>
       )}
   
     <Modal show={isPlantsShowVisible} 

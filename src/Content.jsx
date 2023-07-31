@@ -21,10 +21,10 @@ import { CollectedPlantEdit } from "./CollectedPlantEdit";
 import { CollectedPlantsNoSchedule } from "./CollectedPlantsNoSchedule";
 
 export function Content() {
-  // const navigate = useNavigate();
   const { currentUser } = useContext(UserContext);
   // const [errorMessage, setErrorMessage] = useState('');
   const [dataLoaded, setDataLoaded] = useState(false);
+  const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
   const [plants, setPlants] = useState([]);
   const [isPlantsShowVisible, setIsPlantsShowVisible] = useState(false);
   const [currentPlant, setCurrentPlant] = useState({});
@@ -92,7 +92,7 @@ export function Content() {
   
       successCallback();
       handleClose();
-      handleIndexSchedules();
+      // handleIndexSchedules();
     }).catch((error) => {
       console.log("handleCreateSchedule - error:", error);
     });
@@ -130,7 +130,7 @@ export function Content() {
       axios.delete(`http://localhost:3000/schedules/${schedule.id}.json`).then(() => {
         setSchedules(schedules.filter((p) => p.id !== schedule.id));
         handleClose();
-        window.location.reload();
+        // window.location.reload();
       });
     }
   };
@@ -198,6 +198,8 @@ export function Content() {
         setCollectedPlants((prevCollectedPlants) => [...prevCollectedPlants, response.data]);
         successCallback();
         handleClose();
+        // window.location.reload();
+        
         // note to self: set "congrats" modal to true (modal should have timeout)
       })
       .catch((error) => {
@@ -223,7 +225,11 @@ export function Content() {
     handleIndexPlants();
     handleIndexCollectedPlants();
     handleIndexSchedules();
-  }, []);
+
+    if (!currentUser) {
+      setIsLoginModalVisible(true);
+    }
+  }, [currentUser]);
 
   return (
     <div>
@@ -232,7 +238,7 @@ export function Content() {
       <Routes>
         <Route path="/about" element={<About />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login/>} />
+        {/* <Route path="/login" element={<Login/>} /> */}
 
         <Route
           path="/plants"
@@ -257,9 +263,7 @@ export function Content() {
                   <div>Loading Plants Show...</div>
                 )}
               </>
-            ) : (
-              <Navigate to="/plants" />
-            )
+            ) : null 
           }
         />
 
@@ -281,9 +285,7 @@ export function Content() {
                   onCreateSchedule={handleCreateScheduleModal}
                 />
               </>
-            ) : (
-              <Navigate to="/collected_plants" />
-            )
+            ) : null 
           }
         />
 
@@ -304,14 +306,19 @@ export function Content() {
                   onCreateSchedule={handleCreateScheduleModal}
                 />
               </>
-            ) : (
-              <Navigate to="/schedules/dashboard" />
-            )
+            ) : null 
           }
         />
       </Routes>
       
     {/* MODALS  */}
+
+    {!currentUser && (
+        <Modal show={isLoginModalVisible} 
+          onClose={handleClose}>
+            <Login />
+        </Modal>
+      )}
   
     <Modal show={isPlantsShowVisible} 
       onClose={handleClose}>

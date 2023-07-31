@@ -13,7 +13,7 @@ export function Signup() {
       .then((response) => {
         console.log(response.data);
         event.target.reset();
-        window.location.href = "/"; // Change this to hide a modal, redirect to a specific page, etc.
+        window.location.href = "/login";
       })
       .catch((error) => {
         console.log(error.response.data.errors);

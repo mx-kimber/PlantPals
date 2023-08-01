@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
 import { Signup } from "./Signup";
 import { Login } from "./Login";
@@ -11,18 +11,17 @@ import { PlantsShow } from "./PlantsShow";
 import { SchedulesIndex } from "./SchedulesIndex";
 import { SchedulesShow } from "./SchedulesShow";
 import { SchedulesNew } from './SchedulesNew';
-
 import { CollectedPlantsNew } from "./CollectedPlantsNew";
 import { CollectedPlantsIndex } from "./CollectedPlantsIndex";
 import { CollectedPlantsShow } from "./CollectedPlantsShow";
 import { About } from "./About";
 import { CollectedPlantEdit } from "./CollectedPlantEdit";
-
 import { CollectedPlantsNoSchedule } from "./CollectedPlantsNoSchedule";
 
 export function Content() {
-  const { currentUser } = useContext(UserContext);
   // const [errorMessage, setErrorMessage] = useState('');
+  const [reloadCollectedPlantsNoSchedule, setReloadCollectedPlantsNoSchedule] = useState(false);
+  const { currentUser, loading } = useContext(UserContext);
   const [dataLoaded, setDataLoaded] = useState(false);
   const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
   const [plants, setPlants] = useState([]);
@@ -41,21 +40,26 @@ export function Content() {
 
   const handleIndexPlants = async () => {
     console.log("Fetching plants - OK");
-    try {
-      const startTime = new Date().getTime();
-      const response = await axios.get("http://localhost:3000/plants.json");
-      const endTime = new Date().getTime();
-      const duration = endTime - startTime;
-      const durationInSeconds = duration / 1000;
-      console.log("API/Plants Index loaded in", durationInSeconds, "seconds");
-
-      setPlants(response.data);
-      const firstPlant = response.data[0];
-      setCurrentPlant(firstPlant);
-      setDataLoaded(true); 
-    } catch (error) {
-      console.error(error);
-      // setErrorMessage('Please Log in');
+    if (currentUser) {
+      try {
+        const startTime = new Date().getTime();
+        const response = await axios.get("http://localhost:3000/plants.json");
+        const endTime = new Date().getTime();
+        const duration = endTime - startTime;
+        const durationInSeconds = duration / 1000;
+        console.log("API/Plants Index loaded in", durationInSeconds, "seconds");
+  
+        setPlants(response.data);
+        const firstPlant = response.data[0];
+        setCurrentPlant(firstPlant);
+        setDataLoaded(true); 
+      } catch (error) {
+        console.error(error);
+        // setErrorMessage('Please Log in');
+      }
+    } else {
+      setPlants([]);
+      setCurrentPlant({});
     }
   };
 
@@ -69,11 +73,23 @@ export function Content() {
 
   const handleIndexSchedules = async () => {
     console.log("Fetching Schedules: OK");
-    axios.get("http://localhost:3000/schedules.json").then((response) => {
-      setSchedules(response.data);
-      const firstSchedule = response.data[0];
-        setCurrentSchedule(firstSchedule);
-    });
+  
+    if (currentUser) {
+      try {
+        const response = await axios.get("http://localhost:3000/schedules.json");
+        const schedulesData = response.data;
+        setSchedules(schedulesData);
+        if (schedulesData.length > 0) {
+          const firstSchedule = schedulesData[0];
+          setCurrentSchedule(firstSchedule);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      setSchedules([]);
+      setCurrentSchedule({});
+    }
   };
 
   const handleShowSchedule = (schedule) => {
@@ -92,7 +108,6 @@ export function Content() {
   
       successCallback();
       handleClose();
-      // handleIndexSchedules();
     }).catch((error) => {
       console.log("handleCreateSchedule - error:", error);
     });
@@ -118,8 +133,7 @@ export function Content() {
         })
       );
       successCallback();
-      handleClose();
-      
+      handleClose();    
     });
   };
 
@@ -130,15 +144,16 @@ export function Content() {
       axios.delete(`http://localhost:3000/schedules/${schedule.id}.json`).then(() => {
         setSchedules(schedules.filter((p) => p.id !== schedule.id));
         handleClose();
-        // window.location.reload();
+        setReloadCollectedPlantsNoSchedule(true);
       });
     }
   };
 
   const handleIndexCollectedPlants = async () => {
     console.log("Fetching collected plants - OK");
-    axios.get("http://localhost:3000/collected_plants.json")
-      .then((response) => {
+    if (currentUser) {
+      try {
+        const response = await axios.get("http://localhost:3000/collected_plants.json");
         const collectedPlantsData = response.data;
         const sortedCollectedPlants = collectedPlantsData.sort((a, b) => {
           return new Date(b.createdAt) - new Date(a.createdAt);
@@ -148,10 +163,13 @@ export function Content() {
           const lastCollectedPlant = sortedCollectedPlants[sortedCollectedPlants.length - 1];
           setCurrentCollectedPlant(lastCollectedPlant);
         }
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error(error);
-      });
+      }
+    } else {
+      setCollectedPlants([]);
+      setCurrentCollectedPlant({});
+    }
   };
   
   const handleShowCollectedPlant = async(collected) => {
@@ -185,21 +203,17 @@ export function Content() {
         });
         successCallback();
         handleClose();
-       
       });
-  };
+  };  
 
   const handleCreateCollectedPlant = (params, successCallback) => {
     console.log("handleCreateCollectedPlant - params:", params);
-  
     axios.post("http://localhost:3000/collected_plants.json", params)
       .then((response) => {
         console.log("handleCreateCollectedPlant - response:", response.data);
         setCollectedPlants((prevCollectedPlants) => [...prevCollectedPlants, response.data]);
         successCallback();
         handleClose();
-        // window.location.reload();
-        
         // note to self: set "congrats" modal to true (modal should have timeout)
       })
       .catch((error) => {
@@ -211,7 +225,6 @@ export function Content() {
     setIsCollectedPlantsNewVisible(true);
   };
   
-
   const handleClose = () => {
     setIsPlantsShowVisible(false);
     setIsCollectedPlantsShowVisible(false);
@@ -222,24 +235,25 @@ export function Content() {
   }
   
   useEffect(() => {
+    console.log("useEffect called");
     handleIndexPlants();
     handleIndexCollectedPlants();
     handleIndexSchedules();
-
-    if (!currentUser) {
-      setIsLoginModalVisible(true);
-    }
-  }, [currentUser]);
+      if (!loading && !currentUser) {
+        setIsLoginModalVisible(true);
+      }
+      if (reloadCollectedPlantsNoSchedule) {
+        handleIndexCollectedPlants();
+        setReloadCollectedPlantsNoSchedule(false);
+      }
+    }, [currentUser, loading, reloadCollectedPlantsNoSchedule]);
 
   return (
     <div>
-      {/* {errorMessage && <p>{errorMessage}</p>} */}
-
       <Routes>
         <Route path="/about" element={<About />} />
         <Route path="/signup" element={<Signup />} />
-        {/* <Route path="/login" element={<Login/>} /> */}
-
+        
         <Route
           path="/plants"
           element={
@@ -376,6 +390,3 @@ export function Content() {
    </div>
   );
 }
-
-
-

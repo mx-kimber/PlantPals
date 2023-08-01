@@ -1,7 +1,7 @@
 export function Footer() {
   return (
     <footer>
-      <p>[footer]</p>
+      {/* <p>[footer]</p> */}
     </footer>
   )
 }

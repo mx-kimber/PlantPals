@@ -11,7 +11,7 @@ import { PlantsShow } from "./PlantsShow";
 import { SchedulesIndex } from "./SchedulesIndex";
 import { SchedulesShow } from "./SchedulesShow";
 import { SchedulesNew } from './SchedulesNew';
-import { CollectedPlantsNew } from "./CollectedPlantsNew";
+import { ConfirmationModal} from "./ConfirmationModal";
 import { CollectedPlantsIndex } from "./CollectedPlantsIndex";
 import { CollectedPlantsShow } from "./CollectedPlantsShow";
 import { About } from "./About";
@@ -19,7 +19,6 @@ import { CollectedPlantEdit } from "./CollectedPlantEdit";
 import { CollectedPlantsNoSchedule } from "./CollectedPlantsNoSchedule";
 
 export function Content() {
-  // const [errorMessage, setErrorMessage] = useState('');
   const [reloadCollectedPlantsNoSchedule, setReloadCollectedPlantsNoSchedule] = useState(false);
   const { currentUser, loading } = useContext(UserContext);
   const [dataLoaded, setDataLoaded] = useState(false);
@@ -33,9 +32,9 @@ export function Content() {
   const [currentSchedule, setCurrentSchedule] = useState({});
   const [collectedPlants, setCollectedPlants] = useState([]);
   const [isCollectedPlantsShowVisible, setIsCollectedPlantsShowVisible] = useState(false);
-  const [isCollectedPlantsNewVisible, setIsCollectedPlantsNewVisible] = useState(false);
   const [currentCollectedPlant, setCurrentCollectedPlant] = useState({});
   const [isCollectedPlantEditVisible, setIsCollectedPlantEditVisible] = useState(false);
+  const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false);
   
 
   const handleIndexPlants = async () => {
@@ -55,7 +54,6 @@ export function Content() {
         setDataLoaded(true); 
       } catch (error) {
         console.error(error);
-        // setErrorMessage('Please Log in');
       }
     } else {
       setPlants([]);
@@ -208,21 +206,22 @@ export function Content() {
 
   const handleCreateCollectedPlant = (params, successCallback) => {
     console.log("handleCreateCollectedPlant - params:", params);
-    axios.post("http://localhost:3000/collected_plants.json", params)
+    axios
+      .post("http://localhost:3000/collected_plants.json", params)
       .then((response) => {
         console.log("handleCreateCollectedPlant - response:", response.data);
         setCollectedPlants((prevCollectedPlants) => [...prevCollectedPlants, response.data]);
+        setCurrentCollectedPlant(response.data);
         successCallback();
-        handleClose();
-        // note to self: set "congrats" modal to true (modal should have timeout)
+        setIsConfirmationModalVisible(true);
+        setTimeout(() => {
+          setIsConfirmationModalVisible(false);
+          handleIndexCollectedPlants();
+        }, 3000);
       })
       .catch((error) => {
         console.error("handleCreateCollectedPlant - error:", error);
       });
-  };
-
-  const handleShowCollectedPlantsNew = () => {
-    setIsCollectedPlantsNewVisible(true);
   };
   
   const handleClose = () => {
@@ -231,7 +230,6 @@ export function Content() {
     setIsSchedulesShowVisible(false);
     setIsCollectedPlantEditVisible(false);
     setIsSchedulesCreateModalVisible(false);
-    setIsCollectedPlantsNewVisible(false);
   }
   
   useEffect(() => {
@@ -262,14 +260,12 @@ export function Content() {
                 <PlantsIndex
                   plants={plants}
                   onShowPlant={handleShowPlant}
-                  onCreateCollectedPlant={handleShowCollectedPlantsNew}
                 />
                 {dataLoaded ? (
                   <PlantsShow
                     plant={currentPlant}
                     onCreateCollectedPlant={(params) =>
                       handleCreateCollectedPlant(params, () => {
-                        // note to self: handle opening a confirmation modal?
                       })
                     }
                   />
@@ -380,13 +376,9 @@ export function Content() {
       />
     </Modal>
 
-    <Modal show={isCollectedPlantsNewVisible}
-      onClose={handleClose}>
-      <CollectedPlantsNew 
-        onCreateCollectedPlant={handleCreateCollectedPlant} 
-      />
-    </Modal>
-   
+    <ConfirmationModal show={isConfirmationModalVisible} 
+      plant={currentPlant}>
+    </ConfirmationModal>
    </div>
   );
 }

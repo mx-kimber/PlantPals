@@ -1,6 +1,6 @@
 import React from 'react';
 
-export function CollectedPlantsShow({ collectedPlant, onCreateSchedule }) {
+export function CollectedPlantsShow({ collectedPlant, onCreateSchedule, onEditCollectedPlant }) {
   if (!collectedPlant || Object.keys(collectedPlant).length === 0) {
     return <h1>No plants collected yet</h1>;
   }
@@ -23,8 +23,12 @@ export function CollectedPlantsShow({ collectedPlant, onCreateSchedule }) {
           <h3> SCHEDULE </h3>
           <p>
             <button onClick={() => onCreateSchedule(collectedPlant)}>
-              Create Schedule
-            </button>
+             Create Schedule
+            </button></p>
+          <p>
+            <button onClick={() => onEditCollectedPlant(collectedPlant)}>
+             Edit
+            </button> 
           </p>
         </>
       );

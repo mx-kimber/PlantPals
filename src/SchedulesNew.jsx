@@ -10,7 +10,7 @@ export function SchedulesNew(props) {
 
   return (
     <div>
-  <h1>New Schedule</h1>
+  <h2>Edit or Create Schedule</h2>
   <form onSubmit={handleSubmit}>
     <input type="hidden" name="user_id" value={props.collectedPlant.user_id} />
     <input type="hidden" name="collected_plant_id" value={props.collectedPlant.id} />

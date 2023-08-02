@@ -10,7 +10,7 @@ export function CollectedPlantEdit(props) {
 
   return (
     <div>
-      <h2>CollectedPlantEdit</h2>
+      <h2>Edit Collected Plant</h2>
       <form onSubmit={handleSubmit}>
          <div>
            Nickname: <input defaultValue={props.collectedPlant.nickname} name="nickname" type="text" />

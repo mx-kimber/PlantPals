@@ -230,6 +230,7 @@ export function Content() {
     setIsSchedulesShowVisible(false);
     setIsCollectedPlantEditVisible(false);
     setIsSchedulesCreateModalVisible(false);
+    setIsCollectedPlantEditVisible(false);
   }
   
   useEffect(() => {
@@ -286,13 +287,13 @@ export function Content() {
                 <CollectedPlantsIndex
                   collectedPlants={collectedPlants}
                   onShowCollectedPlant={handleShowCollectedPlant}
-                  onEditCollectedPlant={handleEditCollectedPlant}
                   onUpdateCollectedPlant={handleUpdateCollectedPlant}
                   onCreateSchedule={handleCreateScheduleModal}
                 />
                 <CollectedPlantsShow
                   collectedPlant={currentCollectedPlant}
                   onCreateSchedule={handleCreateScheduleModal}
+                  onEditCollectedPlant={handleEditCollectedPlant}
                 />
               </>
             ) : null 
@@ -351,7 +352,7 @@ export function Content() {
       onClose={handleClose}>
       <CollectedPlantsShow 
         collectedPlant={currentCollectedPlant}
-
+        onEditCollectedPlant={handleEditCollectedPlant}
       />
     </Modal>
 

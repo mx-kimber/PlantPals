@@ -46,9 +46,6 @@ export function CollectedPlantsIndex({
             onClick={() => handleImageClick(collectedPlant)}
           />
           {renderSchedule(collectedPlant)}
-          <button onClick={() => onEditCollectedPlant(collectedPlant)}>
-            Edit
-          </button>
         </div>
       ))}
     </div>

@@ -13,7 +13,7 @@ export function Signup() {
       .then((response) => {
         console.log(response.data);
         event.target.reset();
-        window.location.href = "/login";
+        window.location.reload();
       })
       .catch((error) => {
         console.log(error.response.data.errors);
@@ -37,13 +37,13 @@ export function Signup() {
           Last Name: <input name="last_name" type="text" />
         </div>
         <div>
-          Email: <input name="email" type="email" />
+          Email: <input name="email" type="email" autoComplete="username" />
         </div>
         <div>
-          Password: <input name="password" type="password" />
+          Password: <input name="password" type="password" autoComplete="new-password" />
         </div>
         <div>
-          Password confirmation: <input name="password_confirmation" type="password" />
+          Password confirmation: <input name="password_confirmation" type="password" autoComplete="new-password" />
         </div>
         <button type="submit">Signup</button>
       </form>

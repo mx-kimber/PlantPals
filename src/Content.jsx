@@ -23,6 +23,7 @@ export function Content() {
   const { currentUser, loading } = useContext(UserContext);
   const [dataLoaded, setDataLoaded] = useState(false);
   const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
+  const [isSignupVisible, setIsSignupVisible] = useState(false);
   const [plants, setPlants] = useState([]);
   // const [isPlantsShowVisible, setIsPlantsShowVisible] = useState(false);
   const [currentPlant, setCurrentPlant] = useState({});
@@ -264,7 +265,8 @@ export function Content() {
     <div>
       <Routes>
         <Route path="/about" element={<About />} />
-        <Route path="/signup" element={<Signup />} />
+        {/* <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} /> */}
         
         <Route
           path="/plants"
@@ -340,9 +342,11 @@ export function Content() {
     {/* MODALS  */}
 
     {!currentUser && (
-        <AuthModal show={isLoginModalVisible} 
-          onClose={handleClose}>
-            <Login />
+        <AuthModal show={isLoginModalVisible}>
+          {isSignupVisible ? <Signup /> : <Login />}
+          <button onClick={() => setIsSignupVisible(!isSignupVisible)}>
+            {isSignupVisible ? 'Login' : 'Signup'}
+          </button>
         </AuthModal>
       )}
   

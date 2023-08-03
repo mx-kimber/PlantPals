@@ -24,14 +24,14 @@ export function Content() {
   const [dataLoaded, setDataLoaded] = useState(false);
   const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
   const [plants, setPlants] = useState([]);
-  const [isPlantsShowVisible, setIsPlantsShowVisible] = useState(false);
+  // const [isPlantsShowVisible, setIsPlantsShowVisible] = useState(false);
   const [currentPlant, setCurrentPlant] = useState({});
   const [schedules, setSchedules] = useState([]);
   const [isSchedulesShowVisible, setIsSchedulesShowVisible] = useState(false);
   const [isSchedulesCreateModalVisible, setIsSchedulesCreateModalVisible] = useState(false);
   const [currentSchedule, setCurrentSchedule] = useState({});
   const [collectedPlants, setCollectedPlants] = useState([]);
-  const [isCollectedPlantsShowVisible, setIsCollectedPlantsShowVisible] = useState(false);
+  // const [isCollectedPlantsShowVisible, setIsCollectedPlantsShowVisible] = useState(false);
   const [currentCollectedPlant, setCurrentCollectedPlant] = useState({});
   const [isCollectedPlantEditVisible, setIsCollectedPlantEditVisible] = useState(false);
   const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false);
@@ -63,7 +63,7 @@ export function Content() {
 
   const handleShowPlant = async (plant) => {
     console.log("Fetching plant - OK", plant);
-    setIsPlantsShowVisible(false);
+    // setIsPlantsShowVisible(false);
     if (currentPlant !== plant) {
       setCurrentPlant(plant);
     }
@@ -223,10 +223,23 @@ export function Content() {
         console.error("handleCreateCollectedPlant - error:", error);
       });
   };
+
+  const handleDestroyCollectedPlant = (collectedPlant) => {
+    const okToDelete = window.confirm("Are you sure you want to remove this from your collection?");
+    if (okToDelete) {
+      console.log("Deleting Collected Plant- OK", collectedPlant);
+      axios.delete(`http://localhost:3000/collected_plants/${collectedPlant.id}.json`).then(() => {
+        setCollectedPlants(collectedPlants.filter((p) => p.id !== collectedPlant.id));
+
+        handleClose();
+        handleIndexCollectedPlants();
+      });
+    }
+  };
   
   const handleClose = () => {
-    setIsPlantsShowVisible(false);
-    setIsCollectedPlantsShowVisible(false);
+    // setIsPlantsShowVisible(false);
+    // setIsCollectedPlantsShowVisible(false);
     setIsSchedulesShowVisible(false);
     setIsCollectedPlantEditVisible(false);
     setIsSchedulesCreateModalVisible(false);
@@ -288,12 +301,14 @@ export function Content() {
                   collectedPlants={collectedPlants}
                   onShowCollectedPlant={handleShowCollectedPlant}
                   onUpdateCollectedPlant={handleUpdateCollectedPlant}
+                  onDestoryCollectedPlant={handleDestroyCollectedPlant}
                   onCreateSchedule={handleCreateScheduleModal}
                 />
                 <CollectedPlantsShow
                   collectedPlant={currentCollectedPlant}
                   onCreateSchedule={handleCreateScheduleModal}
                   onEditCollectedPlant={handleEditCollectedPlant}
+                  onDestroyCollectedPlant={handleDestroyCollectedPlant}
                 />
               </>
             ) : null 
@@ -331,13 +346,13 @@ export function Content() {
         </AuthModal>
       )}
   
-    <Modal show={isPlantsShowVisible} 
+    {/* <Modal show={isPlantsShowVisible} 
       onClose={handleClose}>
       <PlantsShow 
         plant={currentPlant} 
         onCreateCollectedPlant={handleCreateCollectedPlant}
       />
-    </Modal>
+    </Modal> */}
 
     <Modal show={isSchedulesShowVisible} 
       onClose={handleClose}>
@@ -348,13 +363,14 @@ export function Content() {
       />
     </Modal>
 
-    <Modal show={isCollectedPlantsShowVisible} 
+    {/* <Modal show={isCollectedPlantsShowVisible} 
       onClose={handleClose}>
       <CollectedPlantsShow 
         collectedPlant={currentCollectedPlant}
         onEditCollectedPlant={handleEditCollectedPlant}
+        onDestroyCollectedPlant={handleDestroyCollectedPlant}
       />
-    </Modal>
+    </Modal> */}
 
     <Modal show={isCollectedPlantEditVisible}
       onClose={handleClose}>
@@ -362,6 +378,7 @@ export function Content() {
         collectedPlant={currentCollectedPlant}
         onEditCollectedPlant={handleEditCollectedPlant}
         onUpdateCollectedPlant={handleUpdateCollectedPlant}
+        onDestroyCollectedPlant={handleDestroyCollectedPlant}
       />
        <SchedulesNew
         collectedPlant={currentCollectedPlant}

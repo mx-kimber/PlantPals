@@ -4,7 +4,6 @@ import './Index.css';
 export function CollectedPlantsIndex({
   collectedPlants,
   onShowCollectedPlant,
-  onEditCollectedPlant,
   onCreateSchedule,
 }) {
   const handleImageClick = (collectedPlant) => {
@@ -34,7 +33,7 @@ export function CollectedPlantsIndex({
 
   return (
     <div id="collected-plants-index">
-      <h1>Plant Collection</h1>
+      {/* <h1>Plant Collection</h1> */}
       {reversedCollectedPlants.map((collectedPlant) => (
         <div key={collectedPlant.id}>
           

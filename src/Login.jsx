@@ -28,7 +28,9 @@ export function Login() {
 
   return (
     <div id="login">
-      <h1>Login</h1>
+      <h2>Hello!</h2>
+      <p>Please log in</p>
+      
       <ul>
         {errors.map((error) => (
           <li key={error}>{error}</li>

@@ -8,6 +8,10 @@ export function CollectedPlantEdit(props) {
       props.onUpdateCollectedPlant(props.collectedPlant.id, params, () => event.target.reset());
     };
 
+    // const handleClick = () => {
+    //   props.onDestroyCollectedPlant(props.collectedPlant);
+    // };
+
   return (
     <div>
       <h2>Edit Collected Plant</h2>
@@ -25,7 +29,7 @@ export function CollectedPlantEdit(props) {
          <button type="submit">Update</button>
        </form>
 
-
+       {/* <button onClick={handleClick}>Destroy Collected Plant</button> */}
 
     </div>
   )

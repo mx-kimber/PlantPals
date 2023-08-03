@@ -1,9 +1,13 @@
 import React from 'react';
 
-export function CollectedPlantsShow({ collectedPlant, onCreateSchedule, onEditCollectedPlant }) {
+export function CollectedPlantsShow({ collectedPlant, onCreateSchedule, onEditCollectedPlant, onDestroyCollectedPlant }) {
   if (!collectedPlant || Object.keys(collectedPlant).length === 0) {
-    return <h1>No plants collected yet</h1>;
+    return <h2>No plants collected yet</h2>;
   }
+
+  const handleClick = () => {
+   onDestroyCollectedPlant(collectedPlant);
+  };
 
   const wateringStartDate = collectedPlant.schedule?.watering_start_date;
 
@@ -25,11 +29,6 @@ export function CollectedPlantsShow({ collectedPlant, onCreateSchedule, onEditCo
             <button onClick={() => onCreateSchedule(collectedPlant)}>
              Create Schedule
             </button></p>
-          <p>
-            <button onClick={() => onEditCollectedPlant(collectedPlant)}>
-             Edit
-            </button> 
-          </p>
         </>
       );
     }
@@ -38,6 +37,7 @@ export function CollectedPlantsShow({ collectedPlant, onCreateSchedule, onEditCo
   return (
     <div>
       <h1>COLLECTED PLANT</h1>
+      
       <h2>{collectedPlant.nickname || 'Give your plant a nickname!'}</h2>
       <p>
         {collectedPlant.custom_image ? (
@@ -67,6 +67,17 @@ export function CollectedPlantsShow({ collectedPlant, onCreateSchedule, onEditCo
 
       <hr />
       {renderSchedule()}
+      <p>
+        <button onClick={() => onEditCollectedPlant(collectedPlant)}>
+          Edit
+        </button> 
+      </p>
+      <p>
+        <button onClick={handleClick}>
+          Destroy Collected Plant
+        </button>
+      </p>
+      
     </div>
   );
 }

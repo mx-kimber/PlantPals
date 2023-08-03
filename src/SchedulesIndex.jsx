@@ -1,7 +1,7 @@
 export function SchedulesIndex(props) {
   return (
     <div>
-      <h1>All Schedules</h1>
+      <h3>All Schedules</h3>
       {props.schedules.map((schedule) => (
         <div key={schedule.id}>
           <h2>{schedule.collected_plant.nickname || schedule.collected_plant.common_name || schedule.collected_plant.latin_name}</h2>

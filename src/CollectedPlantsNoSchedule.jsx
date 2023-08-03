@@ -12,7 +12,7 @@ export function CollectedPlantsNoSchedule({
 
   return (
     <div id="collected-plants-no-schedules-index">
-      <h1>Plants Without Schedules</h1>
+      <h3>Collected Plants needing schedules</h3>
       {collectedPlantsNoSchedule.map((collectedPlant) => (
         <div key={collectedPlant.id}>
           <h2>{collectedPlant.nickname || collectedPlant.common_name || collectedPlant.latin_name}</h2>

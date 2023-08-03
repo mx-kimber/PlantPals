@@ -172,7 +172,7 @@ export function Content() {
   
   const handleShowCollectedPlant = async(collected) => {
     console.log("Showing collected plant - OK", collected);
-    setIsCollectedPlantsShowVisible(false);
+    // setIsCollectedPlantsShowVisible(false);
     if (currentCollectedPlant !== collected) {
       setCurrentCollectedPlant(collected);
     }
@@ -216,8 +216,8 @@ export function Content() {
         setIsConfirmationModalVisible(true);
         setTimeout(() => {
           setIsConfirmationModalVisible(false);
-          handleIndexCollectedPlants();
         }, 3000);
+        handleIndexCollectedPlants(); // Move this call outside the setTimeout
       })
       .catch((error) => {
         console.error("handleCreateCollectedPlant - error:", error);
@@ -232,7 +232,7 @@ export function Content() {
         setCollectedPlants(collectedPlants.filter((p) => p.id !== collectedPlant.id));
 
         handleClose();
-        handleIndexCollectedPlants();
+        window.location.reload();
       });
     }
   };

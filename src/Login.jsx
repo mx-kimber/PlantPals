@@ -36,10 +36,10 @@ export function Login() {
       </ul>
       <form onSubmit={handleSubmit}>
         <div>
-          Email: <input name="email" type="email" />
+          Email: <input name="email" type="email" autoComplete="username" />
         </div>
         <div>
-          Password: <input name="password" type="password" />
+          Password: <input name="password" type="password" autoComplete="current-password" />
         </div>
         <button type="submit">Login</button>
       </form>

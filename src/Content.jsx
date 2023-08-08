@@ -18,6 +18,10 @@ import { About } from "./About";
 import { CollectedPlantEdit } from "./CollectedPlantEdit";
 import { CollectedPlantsNoSchedule } from "./CollectedPlantsNoSchedule";
 
+import React from 'react'
+import FullCalendar from '@fullcalendar/react'
+import dayGridPlugin from '@fullcalendar/daygrid'
+
 export function Content() {
   const [reloadCollectedPlantsNoSchedule, setReloadCollectedPlantsNoSchedule] = useState(false);
   const { currentUser, loading } = useContext(UserContext);
@@ -332,6 +336,14 @@ export function Content() {
                   collectedPlants={collectedPlants}
                   onUpdateCollectedPlant={handleUpdateCollectedPlant}
                   onCreateSchedule={handleCreateScheduleModal}
+                />
+                <FullCalendar
+                  plugins={[ dayGridPlugin ]}
+                  initialView="dayGridMonth"
+                  weekends={true}
+                  events={[
+                   
+                  ]}
                 />
               </>
             ) : null 

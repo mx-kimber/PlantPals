@@ -21,6 +21,7 @@ import { CollectedPlantsNoSchedule } from "./CollectedPlantsNoSchedule";
 import React from 'react'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
+import interactionPlugin from "@fullcalendar/interaction";
 
 export function Content() {
   const [reloadCollectedPlantsNoSchedule, setReloadCollectedPlantsNoSchedule] = useState(false);
@@ -338,12 +339,19 @@ export function Content() {
                   onCreateSchedule={handleCreateScheduleModal}
                 />
                 <FullCalendar
-                  plugins={[ dayGridPlugin ]}
+                  plugins={[dayGridPlugin, interactionPlugin]}
                   initialView="dayGridMonth"
                   weekends={true}
-                  events={[
-                   
-                  ]}
+                  events={schedules.map((schedule) => ({
+                    id: schedule.id,
+                    title: "Watering",
+                    start: new Date(schedule.watering_start_date),
+                    allDay: false,
+                  }))}
+                  eventClick={(arg) => {
+                    // note: handle showing schedule info (collectedPlant)
+                    // open edit modal?
+                  }}
                 />
               </>
             ) : null 

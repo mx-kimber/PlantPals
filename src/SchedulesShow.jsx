@@ -1,5 +1,5 @@
 import React from "react";
-
+import { format } from "date-fns";
 export function SchedulesShow(props) {
   const { schedule } = props;
 
@@ -17,6 +17,8 @@ export function SchedulesShow(props) {
     return null;
   }
 
+  const formattedWateringStartDate = format(new Date(schedule.watering_start_date), "yyyy-MM-dd'T'HH:mm");
+
   return (
     <div>
       <h1>Schedules</h1>
@@ -26,7 +28,7 @@ export function SchedulesShow(props) {
         <div>
           <p>{schedule.collected_plant.watering}</p>
           Watering Start Date{" "}
-          <input defaultValue={schedule.watering_start_date} name="name" type="text" />
+          <input defaultValue={formattedWateringStartDate} name="watering_start_date" type="datetime-local" /> 
         </div>
         <div>
           Days to Water:{" "}

@@ -1,5 +1,5 @@
 import React from 'react';
-import './Index.css';
+import "./Schedules.css"
 
 export function CollectedPlantsNoSchedule({
   collectedPlants,
@@ -14,13 +14,15 @@ export function CollectedPlantsNoSchedule({
     <div id="collected-plants-no-schedules-index">
       <h3>Collected Plants needing schedules</h3>
       {collectedPlantsNoSchedule.map((collectedPlant) => (
-        <div key={collectedPlant.id}>
-          <h2>{collectedPlant.nickname || collectedPlant.common_name || collectedPlant.latin_name}</h2>
+        <div key={collectedPlant.id} className="index-plant-container">
           <img
-            className="rounded-image"
+            className="sch-index-image"
             src={collectedPlant.custom_image || collectedPlant.img}
             alt="No image"
           />
+          <div className="sch-index-font">
+            {collectedPlant.nickname || collectedPlant.common_name || collectedPlant.latin_name}
+          </div>
           <p>
             <button onClick={() => onCreateSchedule(collectedPlant)}>
             Create Schedule

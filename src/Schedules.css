@@ -1,0 +1,28 @@
+.index-plant-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px; 
+}
+
+.sch-index-image {
+  width: 40px;
+  height:40px;
+  object-fit: cover;
+  object-position:top center;
+  border-radius: 10%;
+}
+
+.sch-index-font{
+  font-size: 14px;
+  font-family: fantasy;
+  letter-spacing: 0px;
+}
+
+.sch-show-image {
+  width: 200px;
+  height:200px;
+  object-fit: cover;
+  object-position:top center;
+  border-radius: 10%;
+}

@@ -1,5 +1,5 @@
 import React from 'react';
-import './Index.css';
+import './CollectedPlants.css';
 
 export function CollectedPlantsIndex({
   collectedPlants,
@@ -33,17 +33,17 @@ export function CollectedPlantsIndex({
 
   return (
     <div id="collected-plants-index">
-      {/* <h1>Plant Collection</h1> */}
       {reversedCollectedPlants.map((collectedPlant) => (
-        <div key={collectedPlant.id}>
-          
-          <h2>{collectedPlant.nickname || collectedPlant.common_name || collectedPlant.latin_name}</h2>
+        <div key={collectedPlant.id} className="index-plant-container">
           <img
-            className="rounded-image"
+            className="index-image"
             src={collectedPlant.custom_image || collectedPlant.img}
             alt="No image"
             onClick={() => handleImageClick(collectedPlant)}
           />
+          <div className="index-font">
+            {collectedPlant.nickname || collectedPlant.common_name || collectedPlant.latin_name}
+          </div>
           {/* {renderSchedule(collectedPlant)} */}
         </div>
       ))}

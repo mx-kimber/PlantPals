@@ -337,7 +337,8 @@ export function Content() {
                   onCreateSchedule={handleCreateScheduleModal}
                 />
                 <Calendar 
-                  schedules={schedules} />
+                  schedules={schedules} 
+                  collectedPlants={collectedPlants}/>
               </>
             ) : null 
           }

@@ -14,10 +14,10 @@ export function SchedulesNew(props) {
   <form onSubmit={handleSubmit}>
     <input type="hidden" name="user_id" value={props.collectedPlant.user_id} />
     <input type="hidden" name="collected_plant_id" value={props.collectedPlant.id} />
-
+{/* 
     <div>
       days to water: <input name="days_to_water" type="text" />
-    </div>
+    </div> */}
     <div>
       Watering Start Date: <input name="watering_start_date" type="datetime-local" />
     </div>

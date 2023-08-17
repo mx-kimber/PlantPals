@@ -22,16 +22,22 @@ class Calendar extends React.Component {
     }
   };
 
+  handleDateClick = (arg) => {
+    const calendarApi = this.calendarRef.getApi();
+    calendarApi.changeView('timeGridDay', arg.dateStr);
+  };
+
   render() {
     const { schedules } = this.props;
 
     return (
       <div className="calendar-container">
         <div className="collected-plants-drop-area" 
-        // flagging an issue here with drag and drop function lines 32-33
+        // flagging an issue here with drag and drop function
           onDrop={this.handleDrop} 
           onDragOver={e => e.preventDefault()}>
             <FullCalendar
+              ref={(ref) => (this.calendarRef = ref)}
               plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin]}
               initialView="dayGridMonth"
               headerToolbar={{
@@ -43,7 +49,7 @@ class Calendar extends React.Component {
               editable={true}
               events={schedules.map((schedule) => ({
                 id: schedule.id,
-                title: "watering",
+                title: schedule.collected_plant.custom_name || schedule.collected_plant.latin_name,
                 start: new Date(schedule.watering_start_date),
                 allDay: false,
               }))}
@@ -57,11 +63,6 @@ class Calendar extends React.Component {
       </div>
     );
   }
-
-  handleDateClick = (arg) => {
-    alert(arg.dateStr);
-  }
-
 }
 
 export default Calendar;

@@ -1,12 +1,10 @@
-// need to refactor the drag and drop function/ dragStart is not a function error
-
 import React from 'react';
 import "./Schedules.css";
 
 export function CollectedPlantsNoSchedule({
   collectedPlants,
   onCreateSchedule,
-  // onDragStart,
+  onDragStart,
 }) {
   const collectedPlantsNoSchedule = collectedPlants.filter(
     (collectedPlant) => !collectedPlant.schedule.id
@@ -14,15 +12,18 @@ export function CollectedPlantsNoSchedule({
 
   return (
     <div id="collected-plants-no-schedules-index">
-      <h3>Collected Plants needing schedules</h3>
+      <h3>Collected Plants without schedules</h3>
       {collectedPlantsNoSchedule.map((collectedPlant) => (
-        <div
+       <div
           key={collectedPlant.id}
           className="index-plant-container"
           draggable="true"
-          // onDragStart={(event) => onDragStart(event, collectedPlant)}
-          data-plant-id={collectedPlant.id}
-        >
+          onDragStart={(event) => {
+            console.log("Drag initiated for plant:", collectedPlant.id);
+            event.dataTransfer.setData("text", collectedPlant.id);
+            onDragStart(event, collectedPlant);
+      }}
+     >
           <img
             className="sch-index-image"
             src={collectedPlant.custom_image || collectedPlant.img}

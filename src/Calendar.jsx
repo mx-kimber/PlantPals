@@ -11,16 +11,23 @@ class Calendar extends React.Component {
     collectedPlants: [],
   };
 
-  handleDrop = (info) => {
-    const collectedPlantId = info.dataTransfer.getData('text/plain');
-    const collectedPlant = this.props.collectedPlants.find(plant => plant.id === collectedPlantId);
+handleDrop = (event) => {event.preventDefault();
 
-    if (collectedPlant) {
-      this.setState(prevState => ({
-        collectedPlants: [...prevState.collectedPlants, collectedPlant],
-      }));
-    }
+  const collectedPlantId = event.dataTransfer.getData('text/plain');
+  const currentDate = new Date();
+  currentDate.setHours(8, 0, 0, 0);
+
+  const newSchedule = {
+    collected_plant: collectedPlantId,
+    watering_start_date: currentDate.toISOString(),
+    // need to pass the currentUser here. Global user state or collectedPlant.user_id
   };
+
+  console.log("Creating new schedule:", newSchedule);
+  this.props.onCreateSchedule(newSchedule, () => {
+    window.location.reload();
+  });
+};
 
   handleDateClick = (arg) => {
     const calendarApi = this.calendarRef.getApi();
@@ -32,10 +39,10 @@ class Calendar extends React.Component {
 
     return (
       <div className="calendar-container">
-        <div className="collected-plants-drop-area" 
-        // flagging an issue here with drag and drop function
+        <div
+        className="collected-plants-drop-area"
           onDrop={this.handleDrop} 
-          onDragOver={e => e.preventDefault()}>
+          onDragOver={(e) => e.preventDefault()}>
             <FullCalendar
               ref={(ref) => (this.calendarRef = ref)}
               plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin]}
@@ -47,11 +54,14 @@ class Calendar extends React.Component {
               }}
               weekends={true}
               editable={true}
+              droppable={true}
+              drop={this.handleDrop}
               events={schedules.map((schedule) => ({
                 id: schedule.id,
-                title: schedule.collected_plant.custom_name || schedule.collected_plant.latin_name,
+                title: schedule.collected_plant.nickname || schedule.collected_plant.latin_name,
                 start: new Date(schedule.watering_start_date),
-                allDay: false,
+                allDay: true,
+                // collectedPlantId: schedule.collected_plant.id,
               }))}
               dateClick={this.handleDateClick}
               eventClick={(arg) => {

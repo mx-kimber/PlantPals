@@ -39,7 +39,9 @@ export function Content() {
   const [currentCollectedPlant, setCurrentCollectedPlant] = useState({});
   const [isCollectedPlantEditVisible, setIsCollectedPlantEditVisible] = useState(false);
   const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false);
-  
+  const onDragStart = (event, collectedPlant) => {
+    event.dataTransfer.setData('text/plain', collectedPlant.id);
+  };
 
   const handleIndexPlants = async () => {
     console.log("Fetching plants - OK");
@@ -51,6 +53,7 @@ export function Content() {
         const duration = endTime - startTime;
         const durationInSeconds = duration / 1000;
         console.log("API/Plants Index loaded in", durationInSeconds, "seconds");
+        //note to self: add feature where the welcome modal disappears after the amount of time for  duration or durantionInSeconds
   
         setPlants(response.data);
         const firstPlant = response.data[0];
@@ -335,10 +338,22 @@ export function Content() {
                   collectedPlants={collectedPlants}
                   onUpdateCollectedPlant={handleUpdateCollectedPlant}
                   onCreateSchedule={handleCreateScheduleModal}
+                  onDragStart={onDragStart}
                 />
                 <Calendar 
                   schedules={schedules} 
-                  collectedPlants={collectedPlants}/>
+                  collectedPlants={collectedPlants}
+                  onCreateSchedule={handleCreateSchedule}
+                  onDrop={handleCreateSchedule}
+                  // onDrop={(collectedPlantId, currentDatetime, successCallback) => {
+                  //   const newSchedule = {
+                  //     collected_plant: collectedPlantId,
+                  //     watering_start_date: currentDatetime,
+                  //     // ...other schedule properties
+                  //   };
+                  //   handleCreateSchedule(newSchedule, successCallback);
+                  // }}
+                />
               </>
             ) : null 
           }

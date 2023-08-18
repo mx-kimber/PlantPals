@@ -5,30 +5,38 @@ import interactionPlugin from "@fullcalendar/interaction";
 import listPlugin from '@fullcalendar/list';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import './Calendar.css'; 
+import axios from 'axios';
 
 class Calendar extends React.Component {
-  state = {
-    collectedPlants: [],
+  handleDrop = async (event) => {
+    event.preventDefault();
+  
+    const data = event.dataTransfer.getData('application/json');
+    
+    const { collectedPlantId, currentUserId } = JSON.parse(data);
+  
+    const currentDate = new Date();
+    const formattedDate = currentDate.toISOString().replace('T', ' ').replace('Z', ' UTC +00:00'); //placeholder date
+  
+    const newSchedule = {
+      collected_plant_id: collectedPlantId,
+      watering_start_date: formattedDate,
+      user_id: currentUserId,
+      // days_to_water: , <--save for later
+    };
+  
+    console.log("Creating new schedule:", newSchedule);
+  
+    try {
+      const response = await axios.post("http://localhost:3000/schedules.json", newSchedule);
+      console.log("Schedule created successfully:", response.data);
+      window.location.reload();
+    } catch (error) {
+      console.error("Error creating schedule:", error);
+      console.log('params', newSchedule);
+    }
   };
-
-handleDrop = (event) => {event.preventDefault();
-
-  const collectedPlantId = event.dataTransfer.getData('text/plain');
-  const currentDate = new Date();
-  currentDate.setHours(8, 0, 0, 0);
-
-  const newSchedule = {
-    collected_plant: collectedPlantId,
-    watering_start_date: currentDate.toISOString(),
-    // need to pass the currentUser here. Global user state or collectedPlant.user_id
-  };
-
-  console.log("Creating new schedule:", newSchedule);
-  this.props.onCreateSchedule(newSchedule, () => {
-    window.location.reload();
-  });
-};
-
+  
   handleDateClick = (arg) => {
     const calendarApi = this.calendarRef.getApi();
     calendarApi.changeView('timeGridDay', arg.dateStr);
@@ -61,8 +69,8 @@ handleDrop = (event) => {event.preventDefault();
                 title: schedule.collected_plant.nickname || schedule.collected_plant.latin_name,
                 start: new Date(schedule.watering_start_date),
                 allDay: true,
-                // collectedPlantId: schedule.collected_plant.id,
               }))}
+              
               dateClick={this.handleDateClick}
               eventClick={(arg) => {
               // note: handle showing schedule info (collectedPlant)

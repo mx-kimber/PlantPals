@@ -39,9 +39,14 @@ export function Content() {
   const [currentCollectedPlant, setCurrentCollectedPlant] = useState({});
   const [isCollectedPlantEditVisible, setIsCollectedPlantEditVisible] = useState(false);
   const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false);
-  const onDragStart = (event, collectedPlant) => {
-    event.dataTransfer.setData('text/plain', collectedPlant.id);
-  };
+const onDragStart = (event, collectedPlant) => {
+  const data = JSON.stringify({
+    collectedPlantId: collectedPlant.id,
+    currentUserId: currentUser.id
+  });
+  event.dataTransfer.setData('application/json', data);
+  console.log('paramsDrag', data)
+};
 
   const handleIndexPlants = async () => {
     console.log("Fetching plants - OK");
@@ -207,6 +212,7 @@ export function Content() {
           return updatedCollectedPlants;
         });
         successCallback();
+        handleIndexSchedules()
         handleClose();
       });
   };  

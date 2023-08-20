@@ -7,7 +7,20 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import './Calendar.css'; 
 import axios from 'axios';
 
+
 class Calendar extends React.Component {
+  state = {
+    selectedYear: new Date().getFullYear(),
+  };
+
+  handleYearChange = (event) => {
+    const newYear = parseInt(event.target.value);
+    this.setState({ selectedYear: newYear }, () => {
+      const calendarApi = this.calendarRef.getApi();
+      calendarApi.gotoDate(`${newYear}-01-01`);
+    });
+  };
+  
   handleDrop = async (event) => {
     event.preventDefault();
   
@@ -15,8 +28,14 @@ class Calendar extends React.Component {
     
     const { collectedPlantId, currentUserId } = JSON.parse(data);
   
-    const currentDate = new Date();
-    const formattedDate = currentDate.toISOString().replace('T', ' ').replace('Z', ' UTC +00:00'); //placeholder date
+    console.log("Collected Plant ID:", collectedPlantId);
+    console.log("Current User ID:", currentUserId);
+  
+    const droppedDate = this.calendarRef.getApi().getDate();
+    console.log("Dropped Date:", droppedDate);
+  
+    const formattedDate = droppedDate.toISOString().replace('T', ' ').replace('Z', ' UTC +00:00');
+    console.log("Formatted Date:", formattedDate);
   
     const newSchedule = {
       collected_plant_id: collectedPlantId,
@@ -47,10 +66,18 @@ class Calendar extends React.Component {
 
     return (
       <div className="calendar-container">
-        <div
-        className="collected-plants-drop-area"
-          onDrop={this.handleDrop} 
-          onDragOver={(e) => e.preventDefault()}>
+        <div className="collected-plants-drop-area" 
+        onDrop={this.handleDrop} onDragOver={(e) => e.preventDefault()}>
+          <div className="year-dropdown-container">
+            <label>Select Year: </label>
+            <select value={this.state.selectedYear} onChange={this.handleYearChange}>
+              {Array.from({ length: new Date().getFullYear() - 1949 }, (_, index) => new Date().getFullYear() - index).map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              )).reverse()}
+            </select>
+          </div>
             <FullCalendar
               ref={(ref) => (this.calendarRef = ref)}
               plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin]}

@@ -66,6 +66,7 @@ class Calendar extends React.Component {
 
     return (
       <div className="calendar-container">
+        
         <div className="collected-plants-drop-area" 
         onDrop={this.handleDrop} onDragOver={(e) => e.preventDefault()}>
           <div className="year-dropdown-container">
@@ -87,6 +88,8 @@ class Calendar extends React.Component {
                 center: 'title',
                 end: 'dayGridMonth timeGridWeek timeGridDay',
               }}
+              
+              height={400}
               weekends={true}
               editable={true}
               droppable={true}

@@ -55,7 +55,29 @@ class Calendar extends React.Component {
       console.log('params', newSchedule);
     }
   };
-  
+
+  handleEventDrop = async (eventDropInfo) => {
+    const { event } = eventDropInfo;
+
+    const newStart = event.start;
+
+    const updatedSchedule = {
+      id: event.id,
+      watering_start_date: newStart,
+    };
+
+    console.log("Updating schedule:", updatedSchedule);
+
+    try {
+      const response = await axios.put(`http://localhost:3000/schedules/${event.id}.json`, updatedSchedule);
+      console.log("Schedule updated successfully:", response.data);
+      
+    } catch (error) {
+      console.error("Error updating schedule:", error);
+      console.log('params', updatedSchedule);
+    }
+  };
+
   handleDateClick = (arg) => {
     const calendarApi = this.calendarRef.getApi();
     calendarApi.changeView('timeGridDay', arg.dateStr);
@@ -66,9 +88,9 @@ class Calendar extends React.Component {
 
     return (
       <div className="calendar-container">
-        
-        <div className="collected-plants-drop-area" 
-        onDrop={this.handleDrop} onDragOver={(e) => e.preventDefault()}>
+        <div className="collected-plants-drop-area"
+          onDrop={this.handleDrop}
+          onDragOver={(e) => e.preventDefault()}>
           <div className="year-dropdown-container">
             <label>Select Year: </label>
             <select value={this.state.selectedYear} onChange={this.handleYearChange}>
@@ -94,11 +116,12 @@ class Calendar extends React.Component {
               editable={true}
               droppable={true}
               drop={this.handleDrop}
+              eventDrop={this.handleEventDrop}
               events={schedules.map((schedule) => ({
                 id: schedule.id,
                 title: schedule.collected_plant.nickname || schedule.collected_plant.latin_name,
                 start: new Date(schedule.watering_start_date),
-                allDay: true,
+                // allDay: true,
               }))}
               
               dateClick={this.handleDateClick}

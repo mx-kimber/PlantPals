@@ -86,6 +86,14 @@ class Calendar extends React.Component {
   render() {
     const { schedules } = this.props;
 
+    const eventList = schedules.map((schedule) => ({
+      id: schedule.id,
+      title: schedule.collected_plant.nickname || schedule.collected_plant.latin_name,
+      start: new Date(schedule.watering_start_date),
+      end: new Date(schedule.watering_start_date),
+    }));
+    
+
     return (
       <div className="calendar-container">
         <div className="collected-plants-drop-area"
@@ -110,19 +118,13 @@ class Calendar extends React.Component {
                 center: 'title',
                 end: 'dayGridMonth timeGridWeek timeGridDay',
               }}
-              
               height={400}
               weekends={true}
               editable={true}
               droppable={true}
               drop={this.handleDrop}
               eventDrop={this.handleEventDrop}
-              events={schedules.map((schedule) => ({
-                id: schedule.id,
-                title: schedule.collected_plant.nickname || schedule.collected_plant.latin_name,
-                start: new Date(schedule.watering_start_date),
-                // allDay: true,
-              }))}
+              events={eventList}
               
               dateClick={this.handleDateClick}
               eventClick={(arg) => {

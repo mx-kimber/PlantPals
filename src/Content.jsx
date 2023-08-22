@@ -39,7 +39,8 @@ export function Content() {
   const [currentCollectedPlant, setCurrentCollectedPlant] = useState({});
   const [isCollectedPlantEditVisible, setIsCollectedPlantEditVisible] = useState(false);
   const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false);
-const onDragStart = (event, collectedPlant) => {
+
+  const onDragStart = (event, collectedPlant) => {
   const data = JSON.stringify({
     collectedPlantId: collectedPlant.id,
     currentUserId: currentUser.id
@@ -351,14 +352,7 @@ const onDragStart = (event, collectedPlant) => {
                   collectedPlants={collectedPlants}
                   onCreateSchedule={handleCreateSchedule}
                   onDrop={handleCreateSchedule}
-                  // onDrop={(collectedPlantId, currentDatetime, successCallback) => {
-                  //   const newSchedule = {
-                  //     collected_plant: collectedPlantId,
-                  //     watering_start_date: currentDatetime,
-                  //     // ...other schedule properties
-                  //   };
-                  //   handleCreateSchedule(newSchedule, successCallback);
-                  // }}
+                  onDestroySchedule={handleDestroySchedule}
                 />
               </>
             ) : null 
